@@ -1,127 +1,109 @@
-# StadiumFlow AI — Smart Stadium Assistant for FIFA World Cup 2026
+# 🏟️ StadiumIQ — GenAI Smart Stadium & Tournament Operations Assistant
 
-StadiumFlow AI is a premium, next-generation smart stadium concierge designed to enhance the experience of fans, staff, and volunteers during the FIFA World Cup 2026. Built with modern web standards, it integrates real-time stadium analytics, GenAI assistance, crowd flow monitoring, transport logistics, and accessibility routing into a unified, high-performance interface.
+StadiumIQ (StadiumFlow AI) is a GenAI-enabled solution that enhances stadium operations and the overall tournament experience for fans, organizers, volunteers, and venue staff during the FIFA World Cup 2026. It leverages Generative AI to improve navigation, crowd management, accessibility, transportation, sustainability, multilingual assistance, operational intelligence, and real-time decision support.
 
----
+## 🎯 Problem Statement
 
-## 🌟 Key Features
+Build a GenAI-enabled solution that enhances stadium operations and the overall tournament experience for fans, organizers, volunteers, and venue staff. The solution must leverage Generative AI to improve navigation, crowd management, accessibility, transportation, sustainability, multilingual assistance, operational intelligence, and real-time decision support during the FIFA World Cup 2026.
 
-### 1. 🤖 GenAI Stadium Assistant
-- **AI-Powered Concierge (`AIAssistant.tsx`)**: An interactive, multilingual chatbot that answers questions for fans, volunteers, and staff. It provides directions, concession information, match details, and stadium policies.
+## ✅ How StadiumIQ Solves Every Requirement
 
-### 2. 📊 Live Crowd & Queue Dashboard
-- **Real-Time Analytics (`CrowdDashboard.tsx`)**: Monitor queue times for concession stands, restrooms, and gate entrances. Helps fans choose the best times to move around and assists stadium operations in optimizing crowd flow.
+| Requirement | StadiumIQ Solution |
+|---|---|
+| Navigation | AI-powered turn-by-turn stadium directions via chat + interactive SVG map |
+| Crowd Management | Live zone density dashboard, auto-refresh, AI recommendations |
+| Accessibility | Wheelchair routes, hearing loops, high-contrast + large-text modes |
+| Transportation | Metro, bus, taxi/rideshare, parking real-time info |
+| Multilingual Assistance | English, Español, Français, العربية, हिन्दी via Gemini |
+| Operational Intelligence | Staff portal with zone management + incident reporting |
+| Real-time Decision Support | AI recommends least-crowded gates and safest routes |
+| Fan Experience | Match schedule, live countdown, alerts, notifications |
+| Volunteer Support | Quick action panel and incident reporting |
+| Sustainability | Route optimization reduces walk/idle time and carbon footprint |
 
-### 3. 🗺️ Interactive Stadium Map
-- **Visual Spatial Navigator (`StadiumMap.tsx`)**: High-fidelity map showing seating zones, emergency exits, concessions, first aid stations, and restrooms.
+## 👥 Personas Served
+- **Fans** — Navigation, match info, transport, food locations, multilingual help
+- **Organizers** — Crowd overview, emergency management, real-time decisions
+- **Volunteers** — Quick reporting, zone updates, backup requests
+- **Venue Staff** — Operational dashboard, real-time alerts, incident triage
 
-### 4. 🚆 Real-Time Transport Hub
-- **Transit Logistics (`TransportHub.tsx`)**: Up-to-the-minute updates on shuttle buses, light rail lines, parking lot capacities, and ride-share pick-up/drop-off zone statuses.
+## 🤖 GenAI Features (Gemini Powered)
+- Natural-language stadium navigation
+- Multilingual assistance (5 languages)
+- Crowd flow recommendations
+- Emergency response guidance
+- Personalized fan experience
 
-### 5. ♿ Accessibility Guide
-- **Inclusivity First (`AccessibilityGuide.tsx`)**: Accessible route mapping, dedicated restroom locations, sensory room finder, and direct assistance hotlines for fans with physical or sensory disabilities.
+Calls are routed through the Lovable AI Gateway using `google/gemini-2.5-flash` — no API keys are exposed to the browser. Input is sanitized and rate-limited (10 msgs/min, 300 chars max) inside `AIAssistant.tsx`.
 
-### 6. 🚨 Emergency Alert System
-- **Safety Banner (`EmergencyAlerts.tsx`)**: High-priority alert banner that displays emergency guidance, weather alerts, or evacuation directives instantaneously.
+## 🧱 Architecture
 
-### 7. 💼 Staff & Volunteer Portal
-- **Operations Center (`StaffPortal.tsx`)**: Task assignments, live incident reporting, status updates, and broadcast capabilities for stadium staff.
+- **Framework:** TanStack Start (React 19, Vite, SSR-ready)
+- **Styling:** Tailwind v4 with semantic design tokens (navy + gold)
+- **State:** Local component state + TanStack Router loaders
+- **AI:** Server function `chatWithStadiumIQ` → Lovable AI Gateway → Gemini 2.5 Flash
+- **Constants:** All magic values in `src/lib/constants.ts`
+- **Helpers:** Pure functions in `src/lib/helpers.ts` (sanitization, crowd math, formatting)
 
----
+## 📂 File Structure (excerpt)
 
-## 🛠️ Technology Stack
-
-StadiumFlow AI is built using the following modern web technologies:
-
-- **Framework**: [TanStack Start](https://tanstack.com/router/v1/docs/start/overview) (file-based routing, server functions, and modern React hydration).
-- **Core Library**: [React 19](https://react.dev/) & [TypeScript](https://www.typescriptlang.org/).
-- **Build Tool**: [Vite](https://vite.dev/) with `vite-tsconfig-paths`.
-- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/) with native Vite integration.
-- **UI Primitives**: [Radix UI](https://www.radix-ui.com/) (Accordion, Dialog, Dropdown Menu, Hover Card, Popover, Progress, Tabs, Tooltip).
-- **Icons**: [Lucide React](https://lucide.dev/).
-- **Charts**: [Recharts](https://recharts.org/) for crowd and logistics analytics.
-- **Form Management**: [React Hook Form](https://react-hook-form.com/) & [Zod](https://zod.dev/) for data validation.
-
----
-
-## 📂 Project Structure
-
-```text
-├── public/                 # Static assets (icons, images)
-├── src/
-│   ├── components/         # Reusable UI components & features
-│   │   ├── ui/             # Core design system components (buttons, input, dialogs, etc.)
-│   │   ├── AIAssistant.tsx
-│   │   ├── AccessibilityGuide.tsx
-│   │   ├── CrowdDashboard.tsx
-│   │   ├── EmergencyAlerts.tsx
-│   │   ├── MatchSchedule.tsx
-│   │   ├── Navbar.tsx
-│   │   ├── StadiumMap.tsx
-│   │   ├── StaffPortal.tsx
-│   │   └── TransportHub.tsx
-│   ├── hooks/              # Custom React hooks
-│   ├── lib/                # Utility modules
-│   ├── routes/             # File-based routing (TanStack Router)
-│   │   ├── __root.tsx      # App shell (Layout & global state)
-│   │   ├── index.tsx       # Home dashboard
-│   │   ├── accessibility.tsx
-│   │   ├── map.tsx
-│   │   ├── schedule.tsx
-│   │   ├── staff.tsx
-│   │   └── transport.tsx
-│   ├── styles.css          # Global Tailwind CSS imports and themes
-│   ├── router.tsx          # TanStack Router initialization
-│   ├── start.ts            # Entrypoint helper
-│   └── server.ts           # Nitro server configuration
-├── tsconfig.json           # TypeScript configuration
-├── vite.config.ts          # Vite configuration
-└── package.json            # Scripts & dependencies
 ```
-
----
+src/
+  components/
+    AIAssistant.tsx        # Floating multilingual chat
+    CrowdDashboard.tsx     # Live zone density + AI recs
+    StadiumMap.tsx         # Interactive SVG stadium
+    TransportHub.tsx       # Transit + parking
+    MatchSchedule.tsx      # Fixtures + countdown
+    AccessibilityGuide.tsx # A11y toggles + features
+    EmergencyAlerts.tsx    # Live alert banner
+    StaffPortal.tsx        # Ops + incident tools
+    Navbar.tsx
+  lib/
+    chat.functions.ts      # createServerFn → Gemini
+    constants.ts
+    helpers.ts
+  routes/                  # File-based routing
+    __root.tsx, index.tsx, map.tsx, transport.tsx,
+    schedule.tsx, accessibility.tsx, staff.tsx
+```
 
 ## 🚀 Getting Started
 
-Follow these steps to run the project locally.
-
-### Prerequisites
-
-Ensure you have [Node.js](https://nodejs.org/) installed (v18+ recommended).
-
-### Installation
-
-1. Clone the repository:
-   ```bash
-   git clone <repository-url>
-   cd match-day-helper
-   ```
-
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-### Running Locally
-
-To start the development server:
-
 ```bash
-npm run dev
+bun install       # or: npm install
+bun dev           # or: npm run dev
 ```
 
-The application will be accessible at `http://localhost:8080/`.
-
-### Building for Production
-
-To create an optimized production build:
+## 🧪 Running Tests
 
 ```bash
-npm run build
+npm test                 # vitest run — 36 tests across 6 files
+npm run test:watch       # watch mode
+npm run test:coverage    # coverage report (lcov + text)
 ```
 
-To preview the production build locally:
+Tests cover: helpers (sanitization, crowd color/bar, wait format, deterministic data), CrowdDashboard, EmergencyAlerts, AccessibilityGuide, MatchSchedule, and the AIAssistant chat surface.
 
-```bash
-npm run preview
-```
+## 🔑 Environment Variables
+
+The Gemini key is provided server-side by the Lovable AI Gateway — no `VITE_*` key is required in the browser. When self-hosting, set `LOVABLE_API_KEY` in your server environment.
+
+## ♿ Accessibility Features
+- Skip-to-content link
+- Semantic landmarks (`header`, `nav`, `main`, `section`, `aside`)
+- ARIA labels on all interactive controls
+- `aria-live` regions for alerts and AI recommendations
+- Keyboard-navigable stadium map zones
+- Large-text toggle (`.large-text`)
+- High-contrast toggle (`.high-contrast`)
+- Screen-reader-only skip link
+- Visible focus rings via `focus:ring-2 focus:ring-ring`
+
+## 🔒 Security Measures
+- Input sanitization strips HTML tags before AI calls
+- 300-character input cap
+- 10-message-per-minute client-side rate limit
+- No API keys in the browser bundle (server-only via Lovable AI Gateway)
+- Server function validates payload with Zod
+- Content Security-friendly: no `dangerouslySetInnerHTML`
