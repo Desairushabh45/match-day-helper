@@ -40,7 +40,8 @@ export const chatWithStadiumIQ = createServerFn({ method: "POST" })
     if (!res.ok) {
       const text = await res.text();
       if (res.status === 429) throw new Error("Rate limit reached. Please try again shortly.");
-      if (res.status === 402) throw new Error("AI credits exhausted. Please add credits in workspace billing.");
+      if (res.status === 402)
+        throw new Error("AI credits exhausted. Please add credits in workspace billing.");
       throw new Error(`AI error [${res.status}]: ${text.slice(0, 200)}`);
     }
 

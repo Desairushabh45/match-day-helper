@@ -12,6 +12,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Navbar } from "@/components/Navbar";
 import { AIAssistant } from "@/components/AIAssistant";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 function NotFoundComponent() {
   return (
@@ -82,7 +83,9 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <Navbar />
       <main id="main" role="main" className="mx-auto max-w-7xl px-4 py-6">
-        <Outlet />
+        <ErrorBoundary>
+          <Outlet />
+        </ErrorBoundary>
       </main>
       <footer role="contentinfo" className="mx-auto max-w-7xl px-4 pb-10 pt-6 text-center text-xs text-muted-foreground">
         StadiumFlow AI · GenAI concierge for FIFA World Cup 2026

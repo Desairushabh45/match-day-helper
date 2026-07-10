@@ -13,7 +13,10 @@ interface Msg {
 export function AIAssistant({ seedMessage }: { seedMessage?: string }) {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Msg[]>([
-    { role: "assistant", content: "Hi! I'm StadiumIQ. Ask me about gates, transport, matches, or accessibility." },
+    {
+      role: "assistant",
+      content: "Hi! I'm StadiumIQ. Ask me about gates, transport, matches, or accessibility.",
+    },
   ]);
   const [input, setInput] = useState("");
   const [lang, setLang] = useState("English");
@@ -132,7 +135,10 @@ export function AIAssistant({ seedMessage }: { seedMessage?: string }) {
               </div>
             )}
             {error && (
-              <div role="alert" className="rounded-md bg-destructive/20 p-2 text-xs text-destructive">
+              <div
+                role="alert"
+                className="rounded-md bg-destructive/20 p-2 text-xs text-destructive"
+              >
                 {error}
               </div>
             )}

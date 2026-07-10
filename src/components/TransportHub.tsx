@@ -2,10 +2,30 @@ import { memo } from "react";
 import { Train, Bus, Car, ParkingSquare } from "lucide-react";
 
 const OPTIONS = [
-  { icon: Train, name: "Metro / Subway", detail: "Next train in 4 min · Line A, B", status: "On time" },
-  { icon: Bus, name: "Bus Routes", detail: "Route 12 departs in 8 min · 6 stops", status: "Frequent" },
-  { icon: Car, name: "Taxi / Rideshare", detail: "Est. wait 3–5 min · Gate W pickup", status: "Available" },
-  { icon: ParkingSquare, name: "Parking", detail: "P2: 412 spaces free · P4: full", status: "Limited" },
+  {
+    icon: Train,
+    name: "Metro / Subway",
+    detail: "Next train in 4 min · Line A, B",
+    status: "On time",
+  },
+  {
+    icon: Bus,
+    name: "Bus Routes",
+    detail: "Route 12 departs in 8 min · 6 stops",
+    status: "Frequent",
+  },
+  {
+    icon: Car,
+    name: "Taxi / Rideshare",
+    detail: "Est. wait 3–5 min · Gate W pickup",
+    status: "Available",
+  },
+  {
+    icon: ParkingSquare,
+    name: "Parking",
+    detail: "P2: 412 spaces free · P4: full",
+    status: "Limited",
+  },
 ];
 
 function TransportHubBase({ onPlanRoute }: { onPlanRoute?: () => void }) {
@@ -13,7 +33,9 @@ function TransportHubBase({ onPlanRoute }: { onPlanRoute?: () => void }) {
     <section aria-labelledby="transport-heading" className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 id="transport-heading" className="text-2xl font-bold text-primary">Transportation Hub</h2>
+          <h2 id="transport-heading" className="text-2xl font-bold text-primary">
+            Transportation Hub
+          </h2>
           <p className="text-sm text-muted-foreground">Live options to and from the stadium.</p>
         </div>
         <button

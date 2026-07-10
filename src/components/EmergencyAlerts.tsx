@@ -9,7 +9,12 @@ interface Alert {
 }
 
 const INITIAL: Alert[] = [
-  { id: 1, type: "Weather", message: "Light rain expected around 8pm — ponchos available at gates.", timestamp: new Date().toLocaleTimeString() },
+  {
+    id: 1,
+    type: "Weather",
+    message: "Light rain expected around 8pm — ponchos available at gates.",
+    timestamp: new Date().toLocaleTimeString(),
+  },
 ];
 
 function EmergencyAlertsBase({ onReport }: { onReport?: () => void }) {
