@@ -2,11 +2,31 @@ import { memo, useCallback, useEffect, useState } from "react";
 import { Accessibility, Ear, Eye, HeartPulse, Volume2 } from "lucide-react";
 
 const ITEMS = [
-  { icon: Accessibility, title: "Wheelchair Routes", desc: "Step-free entry via East Gate and elevators to all levels." },
-  { icon: Ear, title: "Hearing Loops", desc: "Induction loops at info desks, gates, and VIP lounges." },
-  { icon: Eye, title: "Visual Aids", desc: "Braille signage, high-contrast wayfinding, tactile maps at kiosks." },
-  { icon: Volume2, title: "Quiet Zones", desc: "Low-stimulation rooms on Level 2, sections 210 and 235." },
-  { icon: HeartPulse, title: "Medical Stations", desc: "24/7 first aid at every gate, defibrillators every 60m." },
+  {
+    icon: Accessibility,
+    title: "Wheelchair Routes",
+    desc: "Step-free entry via East Gate and elevators to all levels.",
+  },
+  {
+    icon: Ear,
+    title: "Hearing Loops",
+    desc: "Induction loops at info desks, gates, and VIP lounges.",
+  },
+  {
+    icon: Eye,
+    title: "Visual Aids",
+    desc: "Braille signage, high-contrast wayfinding, tactile maps at kiosks.",
+  },
+  {
+    icon: Volume2,
+    title: "Quiet Zones",
+    desc: "Low-stimulation rooms on Level 2, sections 210 and 235.",
+  },
+  {
+    icon: HeartPulse,
+    title: "Medical Stations",
+    desc: "24/7 first aid at every gate, defibrillators every 60m.",
+  },
 ];
 
 function AccessibilityGuideBase() {
@@ -29,8 +49,12 @@ function AccessibilityGuideBase() {
     <section aria-labelledby="a11y-heading" className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 id="a11y-heading" className="text-2xl font-bold text-primary">Accessibility Guide</h2>
-          <p className="text-sm text-muted-foreground">A stadium experience designed for everyone.</p>
+          <h2 id="a11y-heading" className="text-2xl font-bold text-primary">
+            Accessibility Guide
+          </h2>
+          <p className="text-sm text-muted-foreground">
+            A stadium experience designed for everyone.
+          </p>
         </div>
         <div className="flex gap-2">
           <button

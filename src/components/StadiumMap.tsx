@@ -8,15 +8,36 @@ interface ZoneInfo {
 }
 
 const ZONE_INFO: Record<string, ZoneInfo> = {
-  "North Gate": { facilities: ["Toilets", "First Aid", "Info Desk"], directions: "Main entry, near metro exit A" },
-  "South Gate": { facilities: ["Toilets", "Parking", "Taxi Stand"], directions: "Bus loop and parking lot P2" },
-  "East Gate": { facilities: ["Family Zone", "First Aid"], directions: "Accessible ramps, wheelchair route" },
+  "North Gate": {
+    facilities: ["Toilets", "First Aid", "Info Desk"],
+    directions: "Main entry, near metro exit A",
+  },
+  "South Gate": {
+    facilities: ["Toilets", "Parking", "Taxi Stand"],
+    directions: "Bus loop and parking lot P2",
+  },
+  "East Gate": {
+    facilities: ["Family Zone", "First Aid"],
+    directions: "Accessible ramps, wheelchair route",
+  },
   "West Gate": { facilities: ["Toilets", "Exit"], directions: "Fastest exit to rideshare pickup" },
-  "Food Court": { facilities: ["30+ Vendors", "Halal", "Vegan"], directions: "Concourse level 2, center" },
-  "VIP Section": { facilities: ["Lounge", "Concierge"], directions: "Level 3 with dedicated elevator" },
+  "Food Court": {
+    facilities: ["30+ Vendors", "Halal", "Vegan"],
+    directions: "Concourse level 2, center",
+  },
+  "VIP Section": {
+    facilities: ["Lounge", "Concierge"],
+    directions: "Level 3 with dedicated elevator",
+  },
 };
 
-interface Pos { x: number; y: number; w: number; h: number; label: string }
+interface Pos {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  label: string;
+}
 
 const LAYOUT: Pos[] = [
   { x: 175, y: 20, w: 150, h: 40, label: "North Gate" },
@@ -37,11 +58,43 @@ function StadiumMapBase() {
   return (
     <section aria-labelledby="map-heading" className="grid gap-4 lg:grid-cols-[1.6fr_1fr]">
       <div className="rounded-xl border border-border bg-card p-4">
-        <h2 id="map-heading" className="mb-2 text-xl font-bold text-primary">Interactive Stadium Map</h2>
-        <svg viewBox="0 0 500 400" className="w-full" role="img" aria-label="Stadium layout with clickable zones">
-          <ellipse cx="250" cy="200" rx="180" ry="130" fill="oklch(0.28 0.05 260)" stroke="var(--gold)" strokeWidth="2" />
-          <rect x="180" y="150" width="140" height="100" rx="6" fill="oklch(0.42 0.14 145)" opacity="0.6" />
-          <text x="250" y="205" textAnchor="middle" fontSize="14" fill="var(--gold)" fontWeight="bold">PITCH</text>
+        <h2 id="map-heading" className="mb-2 text-xl font-bold text-primary">
+          Interactive Stadium Map
+        </h2>
+        <svg
+          viewBox="0 0 500 400"
+          className="w-full"
+          role="img"
+          aria-label="Stadium layout with clickable zones"
+        >
+          <ellipse
+            cx="250"
+            cy="200"
+            rx="180"
+            ry="130"
+            fill="oklch(0.28 0.05 260)"
+            stroke="var(--gold)"
+            strokeWidth="2"
+          />
+          <rect
+            x="180"
+            y="150"
+            width="140"
+            height="100"
+            rx="6"
+            fill="oklch(0.42 0.14 145)"
+            opacity="0.6"
+          />
+          <text
+            x="250"
+            y="205"
+            textAnchor="middle"
+            fontSize="14"
+            fill="var(--gold)"
+            fontWeight="bold"
+          >
+            PITCH
+          </text>
           {LAYOUT.map((p) => {
             const zd = byZone[p.label];
             const isSelected = selected === p.label;
@@ -53,7 +106,9 @@ function StadiumMapBase() {
                 tabIndex={0}
                 role="button"
                 aria-label={`${p.label}, ${zd?.level} crowd`}
-                onKeyDown={(e) => { if (e.key === "Enter") setSelected(p.label); }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") setSelected(p.label);
+                }}
               >
                 <rect
                   x={p.x}
@@ -93,15 +148,29 @@ function StadiumMapBase() {
         <h3 className="mt-1 text-2xl font-bold text-primary">{selected}</h3>
         <div className="mt-2 text-sm text-muted-foreground">{info?.directions}</div>
         <div className="mt-4 rounded-lg bg-accent p-3 text-sm">
-          <div className="flex justify-between"><span>Capacity</span><span className="font-semibold">{cur?.capacity}%</span></div>
-          <div className="flex justify-between"><span>Wait</span><span className="font-semibold">{cur?.wait} min</span></div>
-          <div className="flex justify-between"><span>Crowd</span><span className="font-semibold">{cur?.level}</span></div>
+          <div className="flex justify-between">
+            <span>Capacity</span>
+            <span className="font-semibold">{cur?.capacity}%</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Wait</span>
+            <span className="font-semibold">{cur?.wait} min</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Crowd</span>
+            <span className="font-semibold">{cur?.level}</span>
+          </div>
         </div>
         <div className="mt-4">
           <div className="text-xs uppercase tracking-widest text-muted-foreground">Facilities</div>
           <ul className="mt-2 flex flex-wrap gap-2">
             {info?.facilities.map((f) => (
-              <li key={f} className="rounded-full border border-border bg-background px-2.5 py-1 text-xs">{f}</li>
+              <li
+                key={f}
+                className="rounded-full border border-border bg-background px-2.5 py-1 text-xs"
+              >
+                {f}
+              </li>
             ))}
           </ul>
         </div>

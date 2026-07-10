@@ -13,7 +13,11 @@ function Countdown({ target }: { target: string }) {
   const h = Math.floor((diff / 3600000) % 24);
   const m = Math.floor((diff / 60000) % 60);
   const s = Math.floor((diff / 1000) % 60);
-  return <span className="font-mono tabular-nums">{d}d {h}h {m}m {s}s</span>;
+  return (
+    <span className="font-mono tabular-nums">
+      {d}d {h}h {m}m {s}s
+    </span>
+  );
 }
 
 function MatchScheduleBase() {
@@ -24,7 +28,10 @@ function MatchScheduleBase() {
   const venues = useMemo(() => ["ALL", ...Array.from(new Set(MATCHES.map((m) => m.venue)))], []);
 
   const filtered = useMemo(
-    () => MATCHES.filter((m) => (group === "ALL" || m.group === group) && (venue === "ALL" || m.venue === venue)),
+    () =>
+      MATCHES.filter(
+        (m) => (group === "ALL" || m.group === group) && (venue === "ALL" || m.venue === venue),
+      ),
     [group, venue],
   );
 
@@ -34,17 +41,33 @@ function MatchScheduleBase() {
     <section aria-labelledby="matches-heading" className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 id="matches-heading" className="text-2xl font-bold text-primary">Match Schedule</h2>
-          <p className="text-sm text-muted-foreground">Next match starts in <Countdown target={next.time} /></p>
+          <h2 id="matches-heading" className="text-2xl font-bold text-primary">
+            Match Schedule
+          </h2>
+          <p className="text-sm text-muted-foreground">
+            Next match starts in <Countdown target={next.time} />
+          </p>
         </div>
         <div className="flex gap-2">
-          <select aria-label="Filter by group" value={group} onChange={(e) => setGroup(e.target.value)}
-            className="rounded-md border border-border bg-input px-2 py-1.5 text-sm">
-            {groups.map((g) => <option key={g}>{g}</option>)}
+          <select
+            aria-label="Filter by group"
+            value={group}
+            onChange={(e) => setGroup(e.target.value)}
+            className="rounded-md border border-border bg-input px-2 py-1.5 text-sm"
+          >
+            {groups.map((g) => (
+              <option key={g}>{g}</option>
+            ))}
           </select>
-          <select aria-label="Filter by venue" value={venue} onChange={(e) => setVenue(e.target.value)}
-            className="rounded-md border border-border bg-input px-2 py-1.5 text-sm">
-            {venues.map((v) => <option key={v}>{v}</option>)}
+          <select
+            aria-label="Filter by venue"
+            value={venue}
+            onChange={(e) => setVenue(e.target.value)}
+            className="rounded-md border border-border bg-input px-2 py-1.5 text-sm"
+          >
+            {venues.map((v) => (
+              <option key={v}>{v}</option>
+            ))}
           </select>
         </div>
       </div>
@@ -53,7 +76,12 @@ function MatchScheduleBase() {
           <article key={m.id} className="rounded-xl border border-border bg-card p-4">
             <div className="flex items-center justify-between text-xs text-muted-foreground">
               <span>Group {m.group}</span>
-              <span>{new Date(m.time).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" })}</span>
+              <span>
+                {new Date(m.time).toLocaleString(undefined, {
+                  dateStyle: "medium",
+                  timeStyle: "short",
+                })}
+              </span>
             </div>
             <div className="mt-2 flex items-center justify-between text-lg font-bold">
               <span>{m.home}</span>
