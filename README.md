@@ -49,7 +49,7 @@ Build a GenAI-enabled solution that enhances stadium operations and the overall 
 - Digital-first approach eliminates paper materials
 
 ### 🌐 Multilingual Assistance
-- Gemini AI responds in **English, Español, Français, العربية, हिन्दी**
+- Grok AI responds in **English, Español, Français, العربية, हिन्दी**
 - Language selector in the AI assistant panel
 - Language auto-detection based on user's input phrasing
 - Localized match schedule display using `toLocaleString()`
@@ -79,11 +79,11 @@ Build a GenAI-enabled solution that enhances stadium operations and the overall 
 
 ---
 
-## 🤖 GenAI Implementation (Google Gemini)
+## 🤖 GenAI Implementation (Grok by xAI)
 
 | Aspect | Implementation |
 |---|---|
-| Model | `google/gemini-2.5-flash` via Lovable AI Gateway |
+| Model | `grok-2-latest` via xAI API |
 | Access | TanStack Start server function (API key never exposed to client) |
 | Context | Stadium-specific system prompt for FIFA World Cup 2026 |
 | Languages | 5 languages — English, Spanish, French, Arabic, Hindi |
@@ -129,7 +129,7 @@ src/
 ├── hooks/
 │   └── useDebounce.ts         # Debounce hook (used in AI chat input)
 ├── lib/
-│   ├── chat.functions.ts      # TanStack Start server fn → Gemini AI
+│   ├── chat.functions.ts      # TanStack Start server fn → Grok AI
 │   ├── constants.ts           # App-wide constants (single source of truth)
 │   ├── helpers.ts             # Pure utility functions (sanitise, format, etc.)
 │   └── vitals.ts              # Web Vitals monitoring (LCP, CLS, FID)
@@ -175,9 +175,9 @@ npm install
 ```bash
 cp .env.example .env   # or create .env manually
 ```
-Add your Lovable API key (powers the Gemini AI assistant):
+Add your xAI API key (powers the Grok AI assistant):
 ```env
-LOVABLE_API_KEY=your_lovable_api_key_here
+GROK_API_KEY=your_xai_api_key_here
 ```
 
 ### 4. Run development server
@@ -197,7 +197,7 @@ npm run build
 
 | Variable | Description | Required |
 |---|---|---|
-| `LOVABLE_API_KEY` | Lovable AI gateway key for Gemini access | ✅ Yes |
+| `GROK_API_KEY` | xAI API key for Grok access | ✅ Yes |
 
 ---
 
@@ -243,7 +243,7 @@ npm run build
 
 | Category | Implementation |
 |---|---|
-| GenAI | Gemini 2.5 Flash, server-side, multilingual (5 languages) |
+| GenAI | Grok-2, server-side, multilingual (5 languages) |
 | Navigation | Natural language AI + Interactive SVG map |
 | Crowd Management | Live Crowd Management System with 30s auto-refresh |
 | Accessibility | WCAG 2.1 AA, high contrast, large text, ARIA throughout |

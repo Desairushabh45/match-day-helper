@@ -1,8 +1,8 @@
 /**
  * @fileoverview Chat server function for StadiumIQ.
  * Exposes a TanStack Start server function that forwards chat messages
- * to the Lovable AI gateway (backed by Google Gemini) with input validation,
- * rate-limit error handling, and language-aware system prompting.
+ * to the xAI Grok API with input validation, rate-limit error handling,
+ * and language-aware system prompting.
  *
  * @module chat.functions
  */
@@ -31,8 +31,8 @@ const ChatInput = z.object({
 });
 
 /**
- * TanStack Start server function — proxies a chat conversation to the Gemini model
- * via the Lovable AI gateway. Runs exclusively on the server, keeping the API key
+ * TanStack Start server function — proxies a chat conversation to the Grok model
+ * via the xAI API. Runs exclusively on the server, keeping the API key
  * out of the client bundle.
  *
  * @param {{ data: z.infer<typeof ChatInput> }} input - Validated chat payload
@@ -47,21 +47,21 @@ const ChatInput = z.object({
 export const chatWithStadiumIQ = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => ChatInput.parse(data))
   .handler(async ({ data }) => {
-    const key = process.env.LOVABLE_API_KEY;
-    if (!key) throw new Error("Missing LOVABLE_API_KEY");
+    const key = process.env.GROK_API_KEY || process.env.XAI_API_KEY;
+    if (!key) throw new Error("Missing GROK_API_KEY");
 
     const systemContent = data.language
       ? `${SYSTEM_PROMPT} Reply in ${data.language}.`
       : SYSTEM_PROMPT;
 
-    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const res = await fetch("https://api.x.ai/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Lovable-API-Key": key,
+        "Authorization": `Bearer ${key}`,
       },
       body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
+        model: "grok-2-latest",
         messages: [{ role: "system", content: systemContent }, ...data.messages],
       }),
     });

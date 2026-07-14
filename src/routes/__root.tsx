@@ -114,10 +114,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
       // Resource hints for performance — DNS resolution and connection handshake happen early
-      { rel: "dns-prefetch", href: "https://ai.gateway.lovable.dev" },
-      { rel: "preconnect", href: "https://ai.gateway.lovable.dev" },
-      { rel: "dns-prefetch", href: "https://generativelanguage.googleapis.com" },
-      { rel: "preconnect", href: "https://generativelanguage.googleapis.com" },
+      { rel: "dns-prefetch", href: "https://api.x.ai" },
+      { rel: "preconnect", href: "https://api.x.ai" },
       { rel: "dns-prefetch", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com" },
     ],
