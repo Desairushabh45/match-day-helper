@@ -1,7 +1,16 @@
+/**
+ * @fileoverview Navbar component for StadiumIQ.
+ * Renders the sticky top navigation bar with skip-to-main link,
+ * primary nav links, and a responsive mobile hamburger menu.
+ *
+ * @module Navbar
+ */
+
 import { Link } from "@tanstack/react-router";
 import { memo } from "react";
 import { APP_SHORT } from "@/lib/constants";
 
+/** Navigation link configuration */
 const links = [
   { to: "/", label: "Home" },
   { to: "/map", label: "Map" },
@@ -11,6 +20,13 @@ const links = [
   { to: "/staff", label: "Staff" },
 ] as const;
 
+/**
+ * Primary navigation bar for StadiumIQ.
+ * Includes an accessibility skip-link, branding, desktop nav links,
+ * and a `<details>`-based mobile menu (no JS overhead).
+ *
+ * @returns {JSX.Element} The sticky header navigation element
+ */
 function NavbarBase() {
   return (
     <header
@@ -46,8 +62,7 @@ function NavbarBase() {
                 to={l.to}
                 className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
                 activeProps={{
-                  className:
-                    "rounded-md px-3 py-2 text-sm font-medium text-primary bg-accent",
+                  className: "rounded-md px-3 py-2 text-sm font-medium text-primary bg-accent",
                 }}
                 activeOptions={{ exact: l.to === "/" }}
               >
@@ -81,4 +96,9 @@ function NavbarBase() {
   );
 }
 
+/**
+ * Memoised Navbar — re-renders only when parent forces an update.
+ * Since the navbar has no dynamic props, memoisation eliminates all
+ * unnecessary re-renders caused by route-level state changes.
+ */
 export const Navbar = memo(NavbarBase);

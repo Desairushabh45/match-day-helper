@@ -1,19 +1,54 @@
+/**
+ * @fileoverview AIAssistant — Multilingual GenAI chat widget for StadiumIQ.
+ * Provides a floating chat button and panel powered by the Gemini AI model
+ * via a TanStack Start server function. Supports 5 languages, rate limiting,
+ * input sanitisation, and keyboard-accessible interaction.
+ *
+ * @module AIAssistant
+ */
+
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { MessageCircle, Send, X, Loader2 } from "lucide-react";
 import { useServerFn } from "@tanstack/react-start";
 import { chatWithStadiumIQ } from "@/lib/chat.functions";
 import { sanitizeInput } from "@/lib/helpers";
 import { LANGUAGES, MAX_CHAT_LENGTH, RATE_LIMIT_PER_MIN } from "@/lib/constants";
+import { useDebounce } from "@/hooks/useDebounce";
 
+/** A single chat message with a role and text content */
 interface Msg {
+  /** Originator of the message */
   role: "user" | "assistant";
+  /** Message text content */
   content: string;
 }
 
-export function AIAssistant({ seedMessage }: { seedMessage?: string }) {
+/** Props accepted by the AIAssistant component */
+interface AIAssistantProps {
+  /** Optional seed message to pre-fill the input when the panel opens */
+  seedMessage?: string;
+}
+
+/**
+ * Floating multilingual AI assistant widget for StadiumIQ.
+ * Renders a toggle button (bottom-right) that opens a chat panel powered by
+ * the Google Gemini AI model. Implements:
+ * - Client-side rate limiting (max {@link RATE_LIMIT_PER_MIN} msgs/min)
+ * - Input sanitisation via {@link sanitizeInput}
+ * - Debounced character counter to reduce re-renders during typing
+ * - Smooth scroll-to-bottom on new messages
+ * - Keyboard shortcut: Enter to send, Shift+Enter for newline
+ *
+ * @param {AIAssistantProps} props - Component props
+ * @returns {JSX.Element} The floating chat button and optional chat panel
+ */
+export function AIAssistant({ seedMessage }: AIAssistantProps) {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Msg[]>([
-    { role: "assistant", content: "Hi! I'm StadiumIQ. Ask me about gates, transport, matches, or accessibility." },
+    {
+      role: "assistant",
+      content: "Hi! I'm StadiumIQ. Ask me about gates, transport, matches, or accessibility.",
+    },
   ]);
   const [input, setInput] = useState("");
   const [lang, setLang] = useState("English");
@@ -23,16 +58,31 @@ export function AIAssistant({ seedMessage }: { seedMessage?: string }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const chat = useServerFn(chatWithStadiumIQ);
 
+  /** Debounced input value — used for character counter to reduce renders */
+  const debouncedInput = useDebounce(input, 150);
+
+  // Pre-fill the input field with the seed message when the panel opens
   useEffect(() => {
     if (seedMessage && open) setInput(seedMessage);
   }, [seedMessage, open]);
 
+  // Auto-scroll to the latest message on update
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, loading]);
 
+  /**
+   * Whether the send button/action should be enabled.
+   * Memoised to avoid recomputing on every render.
+   */
   const canSend = useMemo(() => input.trim().length > 0 && !loading, [input, loading]);
 
+  /**
+   * Sends the current input to the AI assistant via the server function.
+   * Performs rate-limit checking, sanitisation, and optimistic UI update.
+   *
+   * @returns {Promise<void>}
+   */
   const send = useCallback(async () => {
     const clean = sanitizeInput(input.trim());
     if (!clean) return;
@@ -58,6 +108,12 @@ export function AIAssistant({ seedMessage }: { seedMessage?: string }) {
     }
   }, [input, messages, chat, lang]);
 
+  /**
+   * Keyboard handler for the textarea — sends message on Enter (without Shift).
+   *
+   * @param {React.KeyboardEvent<HTMLTextAreaElement>} e - Keyboard event
+   * @returns {void}
+   */
   const onKey = useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
       if (e.key === "Enter" && !e.shiftKey) {
@@ -68,11 +124,18 @@ export function AIAssistant({ seedMessage }: { seedMessage?: string }) {
     [send],
   );
 
+  /**
+   * Toggles the chat panel open or closed.
+   *
+   * @returns {void}
+   */
+  const toggleOpen = useCallback(() => setOpen((o) => !o), []);
+
   return (
     <>
       <button
         aria-label={open ? "Close AI assistant" : "Open AI assistant chat"}
-        onClick={() => setOpen((o) => !o)}
+        onClick={toggleOpen}
         className="fixed bottom-6 right-6 z-50 grid size-14 place-items-center rounded-full bg-primary text-primary-foreground shadow-2xl shadow-primary/40 transition-transform hover:scale-105"
       >
         {open ? <X className="size-6" /> : <MessageCircle className="size-6" />}
@@ -87,7 +150,7 @@ export function AIAssistant({ seedMessage }: { seedMessage?: string }) {
           <div className="flex items-center justify-between border-b border-border bg-navy px-4 py-3">
             <div>
               <div className="text-sm font-bold text-primary">StadiumIQ</div>
-              <div className="text-[11px] text-muted-foreground">AI-powered stadium concierge</div>
+              <div className="text-[11px] text-muted-foreground">Multilingual AI Assistance</div>
             </div>
             <select
               aria-label="Language"
@@ -132,7 +195,10 @@ export function AIAssistant({ seedMessage }: { seedMessage?: string }) {
               </div>
             )}
             {error && (
-              <div role="alert" className="rounded-md bg-destructive/20 p-2 text-xs text-destructive">
+              <div
+                role="alert"
+                className="rounded-md bg-destructive/20 p-2 text-xs text-destructive"
+              >
                 {error}
               </div>
             )}
@@ -159,7 +225,7 @@ export function AIAssistant({ seedMessage }: { seedMessage?: string }) {
               </button>
             </div>
             <div className="mt-1 text-right text-[10px] text-muted-foreground">
-              {input.length}/{MAX_CHAT_LENGTH}
+              {debouncedInput.length}/{MAX_CHAT_LENGTH}
             </div>
           </div>
         </div>

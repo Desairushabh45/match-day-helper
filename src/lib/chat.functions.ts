@@ -1,7 +1,21 @@
+/**
+ * @fileoverview Chat server function for StadiumIQ.
+ * Exposes a TanStack Start server function that forwards chat messages
+ * to the Lovable AI gateway (backed by Google Gemini) with input validation,
+ * rate-limit error handling, and language-aware system prompting.
+ *
+ * @module chat.functions
+ */
+
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { SYSTEM_PROMPT } from "./constants";
 
+/**
+ * Zod schema for validating the chat API request payload.
+ * Limits message count (1–30) and individual message length (1–2000 chars)
+ * to prevent token budget overruns and abuse.
+ */
 const ChatInput = z.object({
   messages: z
     .array(
@@ -12,9 +26,24 @@ const ChatInput = z.object({
     )
     .min(1)
     .max(30),
+  /** BCP-47 language name used to instruct the model to reply in that language */
   language: z.string().max(20).optional(),
 });
 
+/**
+ * TanStack Start server function — proxies a chat conversation to the Gemini model
+ * via the Lovable AI gateway. Runs exclusively on the server, keeping the API key
+ * out of the client bundle.
+ *
+ * @param {{ data: z.infer<typeof ChatInput> }} input - Validated chat payload
+ * @returns {Promise<{ reply: string }>} The assistant's reply text
+ *
+ * @throws {Error} When the API key is missing, the rate limit is exceeded,
+ *   AI credits are exhausted, or the upstream request fails.
+ *
+ * @example
+ * const { reply } = await chat({ data: { messages, language: "Español" } });
+ */
 export const chatWithStadiumIQ = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => ChatInput.parse(data))
   .handler(async ({ data }) => {
@@ -40,7 +69,8 @@ export const chatWithStadiumIQ = createServerFn({ method: "POST" })
     if (!res.ok) {
       const text = await res.text();
       if (res.status === 429) throw new Error("Rate limit reached. Please try again shortly.");
-      if (res.status === 402) throw new Error("AI credits exhausted. Please add credits in workspace billing.");
+      if (res.status === 402)
+        throw new Error("AI credits exhausted. Please add credits in workspace billing.");
       throw new Error(`AI error [${res.status}]: ${text.slice(0, 200)}`);
     }
 

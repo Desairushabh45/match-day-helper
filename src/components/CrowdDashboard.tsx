@@ -1,32 +1,84 @@
+/**
+ * @fileoverview CrowdDashboard — Real-time crowd density monitoring for StadiumIQ.
+ * Displays live capacity and wait-time data for all stadium zones with
+ * an AI recommendation for the least-crowded entrance.
+ *
+ * @module CrowdDashboard
+ */
+
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { RefreshCw, Sparkles } from "lucide-react";
 import { ZONES, REFRESH_INTERVAL } from "@/lib/constants";
 import { generateCrowdData, getCrowdBar, getCrowdColor, formatWaitTime } from "@/lib/helpers";
 
+/**
+ * Core Crowd Management System dashboard component.
+ * Polls demo crowd data every `REFRESH_INTERVAL` ms and exposes a manual
+ * refresh button. Recommends the least-crowded zone via an AI insight banner.
+ *
+ * Uses `useMemo` to avoid re-computing sorted zone data on unrelated renders,
+ * and `useCallback` to stabilise the refresh handler reference.
+ *
+ * @returns {JSX.Element} The crowd management dashboard section
+ */
 function CrowdDashboardBase() {
   const [tick, setTick] = useState(1);
+
+  /**
+   * Memoised crowd data snapshot — recalculated only when `tick` increments.
+   * Prevents unnecessary re-renders of child zone cards.
+   */
   const data = useMemo(() => generateCrowdData(ZONES, tick), [tick]);
 
+  // Auto-refresh crowd data every REFRESH_INTERVAL milliseconds
   useEffect(() => {
     const id = setInterval(() => setTick((t) => t + 1), REFRESH_INTERVAL);
     return () => clearInterval(id);
   }, []);
 
+  /**
+   * Increments the tick counter to trigger a new data snapshot.
+   * Stabilised with `useCallback` to prevent child re-renders.
+   *
+   * @returns {void}
+   */
   const refresh = useCallback(() => setTick((t) => t + 1), []);
 
+  /**
+   * Derives the least-crowded zone from the current data snapshot.
+   * Memoised so the sort only runs when `data` changes.
+   */
   const leastCrowded = useMemo(() => {
     return [...data].sort((a, b) => a.capacity - b.capacity)[0];
   }, [data]);
+
+  /**
+   * Aggregated crowd statistics derived from the current data snapshot.
+   * Used for operational overview in future analytics panels.
+   */
+  const crowdStats = useMemo(
+    () => ({
+      totalHigh: data.filter((z) => z.level === "HIGH").length,
+      totalLow: data.filter((z) => z.level === "LOW").length,
+      avgCapacity: Math.round(data.reduce((a, z) => a + z.capacity, 0) / data.length),
+    }),
+    [data],
+  );
 
   return (
     <section aria-labelledby="crowd-heading" className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 id="crowd-heading" className="text-2xl font-bold text-primary">
-            Live Crowd Dashboard
+            Crowd Management System
           </h2>
           <p className="text-sm text-muted-foreground">
-            Auto-refreshing every 30s · {data.length} zones monitored
+            Real-time decision support · Auto-refreshing every 30s · {data.length} zones monitored
+            {crowdStats.totalHigh > 0 && (
+              <span className="ml-2 text-danger">
+                · {crowdStats.totalHigh} high-density zone{crowdStats.totalHigh > 1 ? "s" : ""}
+              </span>
+            )}
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -52,7 +104,8 @@ function CrowdDashboardBase() {
             <div className="text-muted-foreground">
               Least crowded entrance right now:{" "}
               <span className="font-semibold text-foreground">{leastCrowded.zone}</span> (
-              {leastCrowded.capacity}% capacity, {formatWaitTime(leastCrowded.wait)})
+              {leastCrowded.capacity}% capacity, {formatWaitTime(leastCrowded.wait)}) · Avg
+              capacity: {crowdStats.avgCapacity}%
             </div>
           </div>
         </div>
@@ -91,4 +144,8 @@ function CrowdDashboardBase() {
   );
 }
 
+/**
+ * Memoised CrowdDashboard export.
+ * Prevents re-renders when parent route state changes but crowd data is unchanged.
+ */
 export const CrowdDashboard = memo(CrowdDashboardBase);

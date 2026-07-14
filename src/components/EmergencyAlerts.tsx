@@ -1,19 +1,67 @@
+/**
+ * @fileoverview EmergencyAlerts — High-priority alert banners for StadiumIQ.
+ * Renders dismissible emergency notifications (weather, medical, security, etc.)
+ * with ARIA live-region semantics for immediate screen-reader announcement.
+ *
+ * @module EmergencyAlerts
+ */
+
 import { memo, useCallback, useState } from "react";
 import { AlertTriangle, X } from "lucide-react";
+import { ALERT_TYPES } from "@/lib/constants";
 
+/** Shape of a single emergency alert record */
 interface Alert {
+  /** Unique numeric identifier for the alert */
   id: number;
-  type: "Medical" | "Security" | "Weather" | "Evacuation";
+  /** Category of the alert, drawn from {@link ALERT_TYPES} values */
+  type: "Medical" | "Security" | "Weather" | "Evacuation" | "Information";
+  /** Human-readable alert message displayed to the user */
   message: string;
+  /** Formatted timestamp string for when the alert was issued */
   timestamp: string;
 }
 
+/** Props for the EmergencyAlerts component */
+interface EmergencyAlertsProps {
+  /** Optional callback invoked when the user clicks "Report incident" */
+  onReport?: () => void;
+}
+
+/**
+ * Initial alert set shown on first load.
+ * In production, these would be pushed from a real-time emergency system.
+ */
 const INITIAL: Alert[] = [
-  { id: 1, type: "Weather", message: "Light rain expected around 8pm — ponchos available at gates.", timestamp: new Date().toLocaleTimeString() },
+  {
+    id: 1,
+    type: ALERT_TYPES.WEATHER,
+    message: "Light rain expected around 8pm — ponchos available at gates.",
+    timestamp: new Date().toLocaleTimeString(),
+  },
 ];
 
-function EmergencyAlertsBase({ onReport }: { onReport?: () => void }) {
+/**
+ * Emergency Alerts section component.
+ * Renders a dismissible banner for each active alert. When all alerts are
+ * dismissed the component returns `null`, removing itself from the DOM.
+ *
+ * Each alert uses `role="alert"` so screen readers announce it immediately.
+ *
+ * @param {EmergencyAlertsProps} props - Component props
+ * @returns {JSX.Element | null} Alert banners or null when none remain
+ */
+function EmergencyAlertsBase({ onReport }: EmergencyAlertsProps) {
   const [alerts, setAlerts] = useState<Alert[]>(INITIAL);
+
+  /**
+   * Removes an alert from the visible list by its ID.
+   * Stabilised with `useCallback` to avoid re-rendering sibling alerts
+   * when an unrelated state update occurs.
+   *
+   * @param {number} id - The ID of the alert to dismiss
+   * @returns {void}
+   */
   const dismiss = useCallback((id: number) => setAlerts((a) => a.filter((x) => x.id !== id)), []);
 
   if (alerts.length === 0) return null;
@@ -53,4 +101,8 @@ function EmergencyAlertsBase({ onReport }: { onReport?: () => void }) {
   );
 }
 
+/**
+ * Memoised EmergencyAlerts export.
+ * Safe to use at the top of a page layout without causing unnecessary re-renders.
+ */
 export const EmergencyAlerts = memo(EmergencyAlertsBase);

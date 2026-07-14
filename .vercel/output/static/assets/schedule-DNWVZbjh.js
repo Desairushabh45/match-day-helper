@@ -1,0 +1,1 @@
+import{t as e}from"./jsx-runtime-bzQ4Vb5N.js";import{t}from"./MatchSchedule-Uaew4wNQ.js";var n=e(),r=()=>(0,n.jsx)(t,{});export{r as component};
