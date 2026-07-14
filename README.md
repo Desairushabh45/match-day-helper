@@ -151,7 +151,7 @@ src/
 
 ## 💻 Repository
 
-👉 **https://github.com/Rohanindia/med**
+👉 **https://github.com/Desairushabh45/match-day-helper**
 
 ---
 
@@ -162,7 +162,7 @@ src/
 
 ### 1. Clone repository
 ```bash
-git clone https://github.com/Rohanindia/med
+https://github.com/Desairushabh45/match-day-helper
 cd med
 ```
 
