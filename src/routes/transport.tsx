@@ -6,12 +6,15 @@
  */
 
 import { createFileRoute } from "@tanstack/react-router";
-import { TransportHub } from "@/components/TransportHub";
+import { lazy, Suspense } from "react";
+import PageSkeleton from "@/components/PageSkeleton";
+
+const TransportHub = lazy(() => import("@/components/TransportHub").then(m => ({ default: m.TransportHub || m.default })));
 
 export const Route = createFileRoute("/transport")({
   head: () => ({
     meta: [
-      { title: "Transportation Hub — StadiumIQ · FIFA World Cup 2026" },
+      { title: "Transportation Hub — Route Planning" },
       {
         name: "description",
         content:
@@ -19,5 +22,9 @@ export const Route = createFileRoute("/transport")({
       },
     ],
   }),
-  component: () => <TransportHub />,
+  component: () => (
+    <Suspense fallback={<PageSkeleton />}>
+      <TransportHub />
+    </Suspense>
+  ),
 });

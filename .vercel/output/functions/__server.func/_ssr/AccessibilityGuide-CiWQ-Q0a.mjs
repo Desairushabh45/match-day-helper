@@ -1,7 +1,7 @@
 import { r as __toESM } from "../_runtime.mjs";
 import { n as require_jsx_runtime, r as require_react } from "../_libs/react+tanstack__react-query.mjs";
 import { d as HeartPulse, f as Eye, g as Accessibility, n as Volume2, p as Ear } from "../_libs/lucide-react.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/accessibility-Bo3gAH9Z.js
+//#region node_modules/.nitro/vite/services/ssr/assets/AccessibilityGuide-CiWQ-Q0a.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
 /**
@@ -135,12 +135,5 @@ function AccessibilityGuideBase() {
 * Ensures the component does not re-render unless its route activates.
 */
 var AccessibilityGuide = (0, import_react.memo)(AccessibilityGuideBase);
-/**
-* @fileoverview Accessibility route — Multilingual Assistance & Accessibility Guide for StadiumIQ.
-* Renders the accessibility services page at `/accessibility`.
-*
-* @module routes/accessibility
-*/
-var SplitComponent = () => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(AccessibilityGuide, {});
 //#endregion
-export { SplitComponent as component };
+export { AccessibilityGuide };

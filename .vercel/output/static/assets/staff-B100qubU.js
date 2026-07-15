@@ -1,0 +1,2 @@
+const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["assets/StaffPortal-fTrTgpkh.js","assets/jsx-runtime-bzQ4Vb5N.js","assets/index-tHqcwGkw.js"])))=>i.map(i=>d[i]);
+import{i as e,n as t,t as n}from"./jsx-runtime-bzQ4Vb5N.js";import{t as r}from"./index-tHqcwGkw.js";import{t as i}from"./PageSkeleton-DCxE8BkL.js";var a=e(t()),o=n(),s=(0,a.lazy)(()=>r(()=>import(`./StaffPortal-fTrTgpkh.js`).then(e=>({default:e.StaffPortal||e.default})),__vite__mapDeps([0,1,2]))),c=()=>(0,o.jsx)(a.Suspense,{fallback:(0,o.jsx)(i,{}),children:(0,o.jsx)(s,{})});export{c as component};

@@ -71,19 +71,19 @@ function MatchScheduleBase() {
    * Filtered match list based on the selected group and venue.
    * Recalculates whenever the filter selections change.
    */
-  const filtered = useMemo(
-    () =>
-      MATCHES.filter(
-        (m) => (group === "ALL" || m.group === group) && (venue === "ALL" || m.venue === venue),
-      ),
-    [group, venue],
-  );
+  const filtered = useMemo(() =>
+    MATCHES.filter(m => {
+      if (group !== "ALL" && m.group !== group) return false
+      if (venue !== "ALL" && m.venue !== venue) return false
+      return true
+    }),
+    [group, venue]
+  )
 
-  /**
-   * The next upcoming match (first in the array — matches sorted by time).
-   * Used for the countdown display in the section header.
-   */
-  const next = useMemo(() => MATCHES[0], []);
+  const next = useMemo(() =>
+    MATCHES.find(m => new Date(m.time) > new Date()) || MATCHES[0],
+    []
+  )
 
   /**
    * Handler for group filter `<select>` changes.

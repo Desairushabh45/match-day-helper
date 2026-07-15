@@ -69,6 +69,14 @@ function StaffPortalBase() {
     [addLogEntry, zone],
   );
 
+  const handleReportIssue = useCallback((z: string) => {
+    addLogEntry("Reported issue", z);
+  }, [addLogEntry]);
+
+  const handleRequestBackup = useCallback((z: string) => {
+    addLogEntry("Requested backup", z);
+  }, [addLogEntry]);
+
   return (
     <section aria-labelledby="staff-heading" className="grid gap-4 lg:grid-cols-[1fr_1fr]">
       <div className="rounded-xl border border-border bg-card p-4">
@@ -76,7 +84,8 @@ function StaffPortalBase() {
           Operational Intelligence — Staff Portal
         </h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          Update zone status and coordinate on the ground.
+          Real-time operational intelligence for FIFA World Cup 2026 
+          venue staff, organizers, and volunteers
         </p>
 
         <form onSubmit={submit} className="mt-4 space-y-3">
@@ -138,13 +147,13 @@ function StaffPortalBase() {
 
         <div className="mt-4 grid grid-cols-2 gap-2">
           <button
-            onClick={() => quick("Reported issue: crowd surge")}
+            onClick={() => handleReportIssue(zone)}
             className="rounded-lg border border-border bg-background py-2 text-xs hover:bg-accent"
           >
             Report issue
           </button>
           <button
-            onClick={() => quick("Requested backup at current zone")}
+            onClick={() => handleRequestBackup(zone)}
             className="rounded-lg border border-border bg-background py-2 text-xs hover:bg-accent"
           >
             Request backup

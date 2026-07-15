@@ -1,21 +1,11 @@
-//#region node_modules/.nitro/vite/services/ssr/assets/constants-BCCCNdz0.js
-/**
-* @fileoverview Application-wide constants for StadiumIQ.
-* Single source of truth for all hardcoded values — import from here
-* instead of using inline strings/numbers in components.
-*
-* @module constants
-*/
-/** Full application name used in headers and SEO */
-var APP_NAME = "StadiumFlow AI";
+//#region node_modules/.nitro/vite/services/ssr/assets/constants-CYiY_tRs.js
+/** Application name */
+var APP_NAME = "StadiumIQ";
 /** Short display name used in the navbar and branding */
 var APP_SHORT = "StadiumIQ";
-/** Auto-refresh interval for crowd data in milliseconds (30 seconds) */
+/** Auto-refresh interval in milliseconds */
 var REFRESH_INTERVAL = 3e4;
-/**
-* Stadium zone names. Use these string literal values wherever a zone
-* identifier is needed to keep naming consistent across the app.
-*/
+/** Stadium zones monitored by the system */
 var ZONES = [
 	"North Gate",
 	"South Gate",
@@ -24,36 +14,35 @@ var ZONES = [
 	"Food Court",
 	"VIP Section"
 ];
-/**
-* Supported UI languages for the multilingual AI assistant.
-* `code` is the BCP-47 language tag; `label` is the display name.
-*/
+/** Supported AI assistant languages */
 var LANGUAGES = [
 	{
 		code: "en",
-		label: "English"
+		name: "English",
+		flag: "🇬🇧"
 	},
 	{
 		code: "es",
-		label: "Español"
+		name: "Español",
+		flag: "🇪🇸"
 	},
 	{
 		code: "fr",
-		label: "Français"
+		name: "Français",
+		flag: "🇫🇷"
 	},
 	{
 		code: "ar",
-		label: "العربية"
+		name: "العربية",
+		flag: "🇸🇦"
 	},
 	{
 		code: "hi",
-		label: "हिन्दी"
+		name: "हिन्दी",
+		flag: "🇮🇳"
 	}
 ];
-/**
-* Alert type identifiers for the emergency alert system.
-* Used to categorise and style alert banners.
-*/
+/** Emergency alert categories */
 var ALERT_TYPES = {
 	MEDICAL: "Medical",
 	SECURITY: "Security",
@@ -63,7 +52,6 @@ var ALERT_TYPES = {
 };
 /**
 * Transport mode display names for the Transportation Hub.
-* Mirrors the options shown in TransportHub.tsx.
 */
 var TRANSPORT_TYPES = {
 	METRO: "Metro / Subway",
@@ -73,67 +61,65 @@ var TRANSPORT_TYPES = {
 };
 /**
 * System prompt injected into every Gemini AI conversation.
-* Establishes the assistant's persona and scope.
 */
 var SYSTEM_PROMPT = `You are StadiumIQ, an AI assistant for FIFA World Cup 2026. Help fans, staff and volunteers with stadium navigation, crowd management, transportation, accessibility and match information. Be concise and helpful. Respond in the user's language.`;
 /**
 * Sample FIFA World Cup 2026 match data used for the schedule display.
-* In production this would be replaced by a live API feed.
 */
 var MATCHES = [
 	{
-		id: 1,
-		home: "Brazil",
-		away: "France",
+		id: "1",
+		homeTeam: "Brazil",
+		awayTeam: "France",
 		time: "2026-06-15T18:00:00Z",
 		venue: "MetLife Stadium",
 		group: "A",
-		status: "Upcoming"
+		status: "upcoming"
 	},
 	{
-		id: 2,
-		home: "Argentina",
-		away: "Germany",
+		id: "2",
+		homeTeam: "Argentina",
+		awayTeam: "Germany",
 		time: "2026-06-15T21:00:00Z",
 		venue: "SoFi Stadium",
 		group: "B",
-		status: "Upcoming"
+		status: "upcoming"
 	},
 	{
-		id: 3,
-		home: "Spain",
-		away: "England",
+		id: "3",
+		homeTeam: "Spain",
+		awayTeam: "England",
 		time: "2026-06-16T16:00:00Z",
 		venue: "AT&T Stadium",
 		group: "C",
-		status: "Upcoming"
+		status: "upcoming"
 	},
 	{
-		id: 4,
-		home: "Portugal",
-		away: "Netherlands",
+		id: "4",
+		homeTeam: "Portugal",
+		awayTeam: "Netherlands",
 		time: "2026-06-16T19:00:00Z",
 		venue: "Mercedes-Benz Stadium",
 		group: "D",
-		status: "Upcoming"
+		status: "upcoming"
 	},
 	{
-		id: 5,
-		home: "USA",
-		away: "Mexico",
+		id: "5",
+		homeTeam: "USA",
+		awayTeam: "Mexico",
 		time: "2026-06-17T20:00:00Z",
 		venue: "Rose Bowl",
 		group: "E",
-		status: "Upcoming"
+		status: "upcoming"
 	},
 	{
-		id: 6,
-		home: "Japan",
-		away: "Croatia",
+		id: "6",
+		homeTeam: "Japan",
+		awayTeam: "Croatia",
 		time: "2026-06-17T23:00:00Z",
 		venue: "Lumen Field",
 		group: "F",
-		status: "Upcoming"
+		status: "upcoming"
 	}
 ];
 //#endregion

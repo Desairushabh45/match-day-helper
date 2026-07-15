@@ -1,7 +1,7 @@
 import { r as __toESM } from "../_runtime.mjs";
 import { n as require_jsx_runtime, r as require_react } from "../_libs/react+tanstack__react-query.mjs";
-import { a as MATCHES } from "./constants-BCCCNdz0.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/MatchSchedule-Zxx3YFQq.js
+import { a as MATCHES } from "./constants-CYiY_tRs.mjs";
+//#region node_modules/.nitro/vite/services/ssr/assets/MatchSchedule-DAOqAf08.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
 /**
@@ -67,12 +67,12 @@ function MatchScheduleBase() {
 	* Filtered match list based on the selected group and venue.
 	* Recalculates whenever the filter selections change.
 	*/
-	const filtered = (0, import_react.useMemo)(() => MATCHES.filter((m) => (group === "ALL" || m.group === group) && (venue === "ALL" || m.venue === venue)), [group, venue]);
-	/**
-	* The next upcoming match (first in the array — matches sorted by time).
-	* Used for the countdown display in the section header.
-	*/
-	const next = (0, import_react.useMemo)(() => MATCHES[0], []);
+	const filtered = (0, import_react.useMemo)(() => MATCHES.filter((m) => {
+		if (group !== "ALL" && m.group !== group) return false;
+		if (venue !== "ALL" && m.venue !== venue) return false;
+		return true;
+	}), [group, venue]);
+	const next = (0, import_react.useMemo)(() => MATCHES.find((m) => new Date(m.time) > /* @__PURE__ */ new Date()) || MATCHES[0], []);
 	/**
 	* Handler for group filter `<select>` changes.
 	* Stabilised with `useCallback` to avoid re-rendering the filter controls.
@@ -135,12 +135,12 @@ function MatchScheduleBase() {
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 						className: "mt-2 flex items-center justify-between text-lg font-bold",
 						children: [
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: m.home }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: m.homeTeam }),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 								className: "text-primary",
 								children: "vs"
 							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: m.away })
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: m.awayTeam })
 						]
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
@@ -162,4 +162,4 @@ function MatchScheduleBase() {
 */
 var MatchSchedule = (0, import_react.memo)(MatchScheduleBase);
 //#endregion
-export { MatchSchedule as t };
+export { MatchSchedule };

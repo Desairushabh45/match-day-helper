@@ -59,7 +59,7 @@ export function AIAssistant({ seedMessage }: AIAssistantProps) {
   const chat = useServerFn(chatWithStadiumIQ);
 
   /** Debounced input value — used for character counter to reduce renders */
-  const debouncedInput = useDebounce(input, 150);
+  const debouncedInput = useDebounce(input, 300);
 
   // Pre-fill the input field with the seed message when the panel opens
   useEffect(() => {
@@ -83,7 +83,7 @@ export function AIAssistant({ seedMessage }: AIAssistantProps) {
    *
    * @returns {Promise<void>}
    */
-  const send = useCallback(async () => {
+  const handleSend = useCallback(async () => {
     const clean = sanitizeInput(input.trim());
     if (!clean) return;
     const now = Date.now();
@@ -114,14 +114,14 @@ export function AIAssistant({ seedMessage }: AIAssistantProps) {
    * @param {React.KeyboardEvent<HTMLTextAreaElement>} e - Keyboard event
    * @returns {void}
    */
-  const onKey = useCallback(
+  const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
       if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
-        void send();
+        void handleSend();
       }
     },
-    [send],
+    [handleSend],
   );
 
   /**
@@ -129,13 +129,17 @@ export function AIAssistant({ seedMessage }: AIAssistantProps) {
    *
    * @returns {void}
    */
-  const toggleOpen = useCallback(() => setOpen((o) => !o), []);
+  const handleToggle = useCallback(() => setOpen((o) => !o), []);
+
+  const handleLanguageChange = useCallback((langToSet: string) => {
+    setLang(langToSet);
+  }, []);
 
   return (
     <>
       <button
         aria-label={open ? "Close AI assistant" : "Open AI assistant chat"}
-        onClick={toggleOpen}
+        onClick={handleToggle}
         className="fixed bottom-6 right-6 z-50 grid size-14 place-items-center rounded-full bg-primary text-primary-foreground shadow-2xl shadow-primary/40 transition-transform hover:scale-105"
       >
         {open ? <X className="size-6" /> : <MessageCircle className="size-6" />}
@@ -149,13 +153,16 @@ export function AIAssistant({ seedMessage }: AIAssistantProps) {
         >
           <div className="flex items-center justify-between border-b border-border bg-navy px-4 py-3">
             <div>
-              <div className="text-sm font-bold text-primary">StadiumIQ</div>
-              <div className="text-[11px] text-muted-foreground">Multilingual AI Assistance</div>
+              <h3 className="text-sm font-bold text-primary">AI Multilingual Assistance</h3>
+              <p className="text-[10px] text-muted-foreground mt-0.5">
+                Powered by Grok AI · Available in 5 languages ·<br/>
+                Navigation, crowd management, accessibility support
+              </p>
             </div>
             <select
               aria-label="Language"
               value={lang}
-              onChange={(e) => setLang(e.target.value)}
+              onChange={(e) => handleLanguageChange(e.target.value)}
               className="rounded-md border border-border bg-input px-2 py-1 text-xs"
             >
               {LANGUAGES.map((l) => (
@@ -210,7 +217,7 @@ export function AIAssistant({ seedMessage }: AIAssistantProps) {
                 aria-label="Message StadiumIQ"
                 value={input}
                 onChange={(e) => setInput(e.target.value.slice(0, MAX_CHAT_LENGTH))}
-                onKeyDown={onKey}
+                onKeyDown={handleKeyDown}
                 rows={2}
                 placeholder="Ask about gates, matches, transport…"
                 data-gramm="false"
@@ -220,7 +227,7 @@ export function AIAssistant({ seedMessage }: AIAssistantProps) {
               />
               <button
                 aria-label="Send message"
-                onClick={send}
+                onClick={handleSend}
                 disabled={!canSend}
                 className="grid size-10 place-items-center rounded-lg bg-primary text-primary-foreground disabled:opacity-40"
               >

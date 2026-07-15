@@ -6,12 +6,15 @@
  */
 
 import { createFileRoute } from "@tanstack/react-router";
-import { MatchSchedule } from "@/components/MatchSchedule";
+import { lazy, Suspense } from "react";
+import PageSkeleton from "@/components/PageSkeleton";
+
+const MatchSchedule = lazy(() => import("@/components/MatchSchedule").then(m => ({ default: m.MatchSchedule || m.default })));
 
 export const Route = createFileRoute("/schedule")({
   head: () => ({
     meta: [
-      { title: "Match Schedule — StadiumIQ · FIFA World Cup 2026" },
+      { title: "Match Schedule — FIFA World Cup 2026" },
       {
         name: "description",
         content:
@@ -19,5 +22,9 @@ export const Route = createFileRoute("/schedule")({
       },
     ],
   }),
-  component: () => <MatchSchedule />,
+  component: () => (
+    <Suspense fallback={<PageSkeleton />}>
+      <MatchSchedule />
+    </Suspense>
+  ),
 });

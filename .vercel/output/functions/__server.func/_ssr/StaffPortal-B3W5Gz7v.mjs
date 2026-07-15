@@ -1,7 +1,7 @@
 import { r as __toESM } from "../_runtime.mjs";
 import { n as require_jsx_runtime, r as require_react } from "../_libs/react+tanstack__react-query.mjs";
-import { l as ZONES } from "./constants-BCCCNdz0.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/staff-EJ6E5DQy.js
+import { l as ZONES } from "./constants-CYiY_tRs.mjs";
+//#region node_modules/.nitro/vite/services/ssr/assets/StaffPortal-B3W5Gz7v.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
 /**
@@ -28,11 +28,17 @@ function StaffPortalBase() {
 	* Appends a timestamped entry to the activity log.
 	* Caps the log at 20 entries to prevent unbounded growth.
 	*
-	* @param {string} label - The action description to log
+	* @param {string} action - The action description to log
+	* @param {string} [z] - The zone it applies to
 	* @returns {void}
 	*/
-	const addLogEntry = (0, import_react.useCallback)((label) => {
-		setLog((l) => [`[${(/* @__PURE__ */ new Date()).toLocaleTimeString()}] ${label}`, ...l].slice(0, 20));
+	const addLogEntry = (0, import_react.useCallback)((action, z) => {
+		setLog((l) => [{
+			id: Date.now(),
+			action,
+			zone: z,
+			timestamp: /* @__PURE__ */ new Date()
+		}, ...l].slice(0, 20));
 	}, []);
 	/**
 	* Handles the zone-status form submission.
@@ -44,8 +50,8 @@ function StaffPortalBase() {
 	*/
 	const submit = (0, import_react.useCallback)((e) => {
 		e.preventDefault();
-		const entry = `${zone} → ${level}${note ? ` · ${note}` : ""}`;
-		addLogEntry(entry);
+		const action = `Status updated to ${level}${note ? ` · ${note}` : ""}`;
+		addLogEntry(action, zone);
 		setNote("");
 	}, [
 		zone,
@@ -62,7 +68,13 @@ function StaffPortalBase() {
 	* @returns {void}
 	*/
 	const quick = (0, import_react.useCallback)((label) => {
-		addLogEntry(label);
+		addLogEntry(label, zone);
+	}, [addLogEntry, zone]);
+	const handleReportIssue = (0, import_react.useCallback)((z) => {
+		addLogEntry("Reported issue", z);
+	}, [addLogEntry]);
+	const handleRequestBackup = (0, import_react.useCallback)((z) => {
+		addLogEntry("Requested backup", z);
 	}, [addLogEntry]);
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
 		"aria-labelledby": "staff-heading",
@@ -77,7 +89,7 @@ function StaffPortalBase() {
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 					className: "mt-1 text-sm text-muted-foreground",
-					children: "Update zone status and coordinate on the ground."
+					children: "Real-time operational intelligence for FIFA World Cup 2026 venue staff, organizers, and volunteers"
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("form", {
 					onSubmit: submit,
@@ -130,12 +142,12 @@ function StaffPortalBase() {
 					className: "mt-4 grid grid-cols-2 gap-2",
 					children: [
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
-							onClick: () => quick("Reported issue: crowd surge"),
+							onClick: () => handleReportIssue(zone),
 							className: "rounded-lg border border-border bg-background py-2 text-xs hover:bg-accent",
 							children: "Report issue"
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
-							onClick: () => quick("Requested backup at current zone"),
+							onClick: () => handleRequestBackup(zone),
 							className: "rounded-lg border border-border bg-background py-2 text-xs hover:bg-accent",
 							children: "Request backup"
 						}),
@@ -163,10 +175,16 @@ function StaffPortalBase() {
 				children: [log.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", {
 					className: "text-muted-foreground",
 					children: "No activity yet."
-				}), log.map((l, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", {
+				}), log.map((l) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", {
 					className: "rounded-md bg-accent px-3 py-1.5 font-mono text-xs",
-					children: l
-				}, i))]
+					children: [
+						"[",
+						l.timestamp.toLocaleTimeString(),
+						"] ",
+						l.zone ? `${l.zone} → ` : "",
+						l.action
+					]
+				}, l.id))]
 			})]
 		})]
 	});
@@ -176,12 +194,5 @@ function StaffPortalBase() {
 * Safe for use in route components that may re-render due to URL changes.
 */
 var StaffPortal = (0, import_react.memo)(StaffPortalBase);
-/**
-* @fileoverview Staff route — Operational Intelligence portal for StadiumIQ.
-* Renders the volunteer and staff coordination portal at `/staff`.
-*
-* @module routes/staff
-*/
-var SplitComponent = () => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(StaffPortal, {});
 //#endregion
-export { SplitComponent as component };
+export { StaffPortal };

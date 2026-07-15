@@ -56,14 +56,14 @@ function CrowdDashboardBase() {
    * Aggregated crowd statistics derived from the current data snapshot.
    * Used for operational overview in future analytics panels.
    */
-  const crowdStats = useMemo(
-    () => ({
-      totalHigh: data.filter((z) => z.level === "HIGH").length,
-      totalLow: data.filter((z) => z.level === "LOW").length,
-      avgCapacity: Math.round(data.reduce((a, z) => a + z.capacity, 0) / data.length),
-    }),
-    [data],
-  );
+  const crowdStats = useMemo(() => {
+    const highZones = data.filter((z) => z.level === "HIGH");
+    const lowZones = data.filter((z) => z.level === "LOW");
+    const avgCapacity = Math.round(data.reduce((sum, z) => sum + z.capacity, 0) / data.length);
+    const recommendedZone = data.reduce((min, z) =>
+      z.capacity < min.capacity ? z : min, data[0]);
+    return { highZones, lowZones, avgCapacity, recommendedZone };
+  }, [data]);
 
   return (
     <section aria-labelledby="crowd-heading" className="space-y-4">
@@ -74,11 +74,6 @@ function CrowdDashboardBase() {
           </h2>
           <p className="text-sm text-muted-foreground">
             Real-time decision support · Auto-refreshing every 30s · {data.length} zones monitored
-            {crowdStats.totalHigh > 0 && (
-              <span className="ml-2 text-danger">
-                · {crowdStats.totalHigh} high-density zone{crowdStats.totalHigh > 1 ? "s" : ""}
-              </span>
-            )}
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -103,8 +98,8 @@ function CrowdDashboardBase() {
             <div className="font-semibold text-primary">AI Recommendation</div>
             <div className="text-muted-foreground">
               Least crowded entrance right now:{" "}
-              <span className="font-semibold text-foreground">{leastCrowded.name}</span> (
-              {leastCrowded.capacity}% capacity, {formatWaitTime(leastCrowded.waitTime)}) · Avg
+              <span className="font-semibold text-foreground">{crowdStats.recommendedZone.name}</span> (
+              {crowdStats.recommendedZone.capacity}% capacity, {formatWaitTime(crowdStats.recommendedZone.waitTime)}) · Avg
               capacity: {crowdStats.avgCapacity}%
             </div>
           </div>

@@ -7,7 +7,7 @@
  */
 
 import { Link } from "@tanstack/react-router";
-import { memo } from "react";
+import { memo, useCallback, useState } from "react";
 import { APP_SHORT } from "@/lib/constants";
 
 /** Navigation link configuration */
@@ -28,6 +28,18 @@ const links = [
  * @returns {JSX.Element} The sticky header navigation element
  */
 function NavbarBase() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState("/");
+
+  const handleNavClick = useCallback((page: string) => {
+    setCurrentPage(page);
+    setMobileMenuOpen(false);
+  }, []);
+
+  const handleMobileToggle = useCallback(() => {
+    setMobileMenuOpen((prev) => !prev);
+  }, []);
+
   return (
     <header
       role="banner"
@@ -71,26 +83,30 @@ function NavbarBase() {
             </li>
           ))}
         </ul>
-        <details className="relative md:hidden">
-          <summary
+        <div className="relative md:hidden">
+          <button
             aria-label="Open menu"
+            onClick={handleMobileToggle}
             className="cursor-pointer list-none rounded-md border border-border px-3 py-2 text-sm"
           >
             Menu
-          </summary>
-          <ul className="absolute right-0 mt-2 w-48 rounded-lg border border-border bg-popover p-2 shadow-xl">
-            {links.map((l) => (
-              <li key={l.to}>
-                <Link
-                  to={l.to}
-                  className="block rounded-md px-3 py-2 text-sm text-popover-foreground hover:bg-accent"
-                >
-                  {l.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </details>
+          </button>
+          {mobileMenuOpen && (
+            <ul className="absolute right-0 mt-2 w-48 rounded-lg border border-border bg-popover p-2 shadow-xl">
+              {links.map((l) => (
+                <li key={l.to}>
+                  <Link
+                    to={l.to}
+                    onClick={() => handleNavClick(l.to)}
+                    className="block rounded-md px-3 py-2 text-sm text-popover-foreground hover:bg-accent"
+                  >
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       </nav>
     </header>
   );

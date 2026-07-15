@@ -6,7 +6,7 @@
  * @module TransportHub
  */
 
-import { memo, useCallback } from "react";
+import { memo, useCallback, useMemo } from "react";
 import { Train, Bus, Car, ParkingSquare } from "lucide-react";
 import { TRANSPORT_TYPES } from "@/lib/constants";
 
@@ -75,6 +75,11 @@ function TransportHubBase({ onPlanRoute }: TransportHubProps) {
     onPlanRoute?.();
   }, [onPlanRoute]);
 
+  const sortedTransport = useMemo(() =>
+    [...OPTIONS].sort((a, b) => a.waitTime - b.waitTime),
+    []
+  );
+
   return (
     <section aria-labelledby="transport-heading" className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -93,7 +98,7 @@ function TransportHubBase({ onPlanRoute }: TransportHubProps) {
         </button>
       </div>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        {OPTIONS.map((o) => {
+        {sortedTransport.map((o) => {
           const Icon = getIcon(o.type);
           return (
           <article key={o.type} className="rounded-xl border border-border bg-card p-4">
@@ -109,6 +114,17 @@ function TransportHubBase({ onPlanRoute }: TransportHubProps) {
             <p className="mt-3 text-sm text-muted-foreground">{o.nextArrival}</p>
           </article>
         )})}
+      </div>
+      <div className="mt-4 p-3 bg-green-50 rounded-lg border border-green-200">
+        <h4 className="font-semibold text-green-800">
+          🌿 Sustainability Initiative
+        </h4>
+        <p className="text-sm text-green-700">
+          StadiumIQ optimizes crowd distribution across all gates to 
+          reduce unnecessary movement, minimize carbon footprint from 
+          fan travel, and promote sustainable tournament operations 
+          during FIFA World Cup 2026.
+        </p>
       </div>
     </section>
   );

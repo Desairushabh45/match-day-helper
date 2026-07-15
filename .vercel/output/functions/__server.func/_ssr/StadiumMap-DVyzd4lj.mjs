@@ -1,8 +1,8 @@
 import { r as __toESM } from "../_runtime.mjs";
 import { n as require_jsx_runtime, r as require_react } from "../_libs/react+tanstack__react-query.mjs";
-import { l as ZONES } from "./constants-BCCCNdz0.mjs";
-import { n as generateCrowdData, r as getCrowdBar } from "./helpers-n7cuZdJ9.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/map-DFppPlQ7.js
+import { l as ZONES } from "./constants-CYiY_tRs.mjs";
+import { n as generateCrowdData, r as getCrowdBar } from "./helpers-CJx_akSF.mjs";
+//#region node_modules/.nitro/vite/services/ssr/assets/StadiumMap-DVyzd4lj.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
 /**
@@ -137,7 +137,7 @@ function StadiumMapBase() {
 	/**
 	* Crowd data indexed by zone name for O(1) lookup during SVG rendering.
 	*/
-	const byZone = (0, import_react.useMemo)(() => Object.fromEntries(data.map((d) => [d.zone, d])), [data]);
+	const byZone = (0, import_react.useMemo)(() => Object.fromEntries(data.map((d) => [d.name, d])), [data]);
 	/**
 	* Updates the selected zone when the user clicks or activates a zone via keyboard.
 	*
@@ -278,7 +278,7 @@ function StadiumMapBase() {
 							className: "flex justify-between",
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "Wait" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
 								className: "font-semibold",
-								children: [cur?.wait, " min"]
+								children: [cur?.waitTime, " min"]
 							})]
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
@@ -313,12 +313,5 @@ function StadiumMapBase() {
 * caused by parent navigation state changes.
 */
 var StadiumMap = (0, import_react.memo)(StadiumMapBase);
-/**
-* @fileoverview Map route — Interactive Stadium Map for StadiumIQ.
-* Renders the interactive SVG stadium navigation map at `/map`.
-*
-* @module routes/map
-*/
-var SplitComponent = () => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(StadiumMap, {});
 //#endregion
-export { SplitComponent as component };
+export { StadiumMap };

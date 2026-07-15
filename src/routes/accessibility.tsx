@@ -6,12 +6,15 @@
  */
 
 import { createFileRoute } from "@tanstack/react-router";
-import { AccessibilityGuide } from "@/components/AccessibilityGuide";
+import { lazy, Suspense } from "react";
+import PageSkeleton from "@/components/PageSkeleton";
+
+const AccessibilityGuide = lazy(() => import("@/components/AccessibilityGuide").then(m => ({ default: m.AccessibilityGuide || m.default })));
 
 export const Route = createFileRoute("/accessibility")({
   head: () => ({
     meta: [
-      { title: "Multilingual Assistance & Accessibility — StadiumIQ · FIFA 2026" },
+      { title: "Accessibility Guide — Inclusive Stadium Experience" },
       {
         name: "description",
         content:
@@ -19,5 +22,9 @@ export const Route = createFileRoute("/accessibility")({
       },
     ],
   }),
-  component: () => <AccessibilityGuide />,
+  component: () => (
+    <Suspense fallback={<PageSkeleton />}>
+      <AccessibilityGuide />
+    </Suspense>
+  ),
 });

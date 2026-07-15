@@ -1,14 +1,14 @@
 import { r as __toESM } from "../_runtime.mjs";
 import { n as require_jsx_runtime, r as require_react, t as QueryClientProvider } from "../_libs/react+tanstack__react-query.mjs";
 import { l as MessageCircle, s as Send, t as X, u as LoaderCircle } from "../_libs/lucide-react.mjs";
+import { i as LANGUAGES, n as APP_NAME, r as APP_SHORT } from "./constants-CYiY_tRs.mjs";
+import { a as sanitizeInput } from "./helpers-CJx_akSF.mjs";
 import { E as isRedirect, c as HeadContent, d as Outlet, f as lazyRouteComponent, g as useRouter, h as Link, m as createRootRouteWithContext, p as createFileRoute, s as Scripts, u as createRouter } from "../_libs/@tanstack/react-router+[...].mjs";
 import { i as TSS_SERVER_FUNCTION, l as createServerFn } from "./esm-Dova13aH.mjs";
-import { i as LANGUAGES, n as APP_NAME, r as APP_SHORT } from "./constants-BCCCNdz0.mjs";
 import { i as stringType, n as enumType, r as objectType, t as arrayType } from "../_libs/zod.mjs";
-import { a as sanitizeInput } from "./helpers-n7cuZdJ9.mjs";
-import { t as getServerFnById } from "../__23tanstack-start-server-fn-resolver-BQq7kucB.mjs";
+import { t as getServerFnById } from "../__23tanstack-start-server-fn-resolver-DfebIovC.mjs";
 import { t as QueryClient } from "../_libs/tanstack__query-core.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/router-Ct-WOAO0.js
+//#region node_modules/.nitro/vite/services/ssr/assets/router-Ciux8aVT.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
 function useServerFn(serverFn) {
@@ -27,7 +27,7 @@ function useServerFn(serverFn) {
 		}
 	}, [router, serverFn]);
 }
-var styles_default = "/assets/styles-B_E7PA-B.css";
+var styles_default = "/assets/styles-ChT6fflF.css";
 function reportLovableError(error, context = {}) {
 	if (typeof window === "undefined") return;
 	window.__lovableEvents?.captureException?.(error, {
@@ -41,61 +41,52 @@ function reportLovableError(error, context = {}) {
 	});
 }
 /**
-* Web Vitals monitoring utilities for StadiumIQ.
-* Observes Core Web Vitals (LCP, CLS, FID) using the PerformanceObserver API
-* and logs them to the console for performance analysis.
-*
-* @module vitals
+* Initializes Web Vitals monitoring using PerformanceObserver
+* Tracks LCP, CLS, and FID metrics for performance analysis
 */
-/**
-* Initializes Web Vitals monitoring via PerformanceObserver.
-* Tracks Largest Contentful Paint (LCP) and Cumulative Layout Shift (CLS).
-* Silently no-ops in environments without PerformanceObserver support.
-*
-* @returns {void}
-*
-* @example
-* // Call once at app startup
-* initVitals();
-*/
-function initVitals() {
+var initVitals = () => {
 	if (typeof window === "undefined" || !("PerformanceObserver" in window)) return;
 	try {
 		new PerformanceObserver((list) => {
 			const entries = list.getEntries();
 			const lcp = entries[entries.length - 1];
-			if (lcp) console.log(`[StadiumIQ Vitals] LCP: ${Math.round(lcp.startTime)}ms`);
+			console.log("[Vitals] LCP:", Math.round(lcp.startTime), "ms");
 		}).observe({
 			type: "largest-contentful-paint",
 			buffered: true
 		});
-	} catch {}
+	} catch (e) {}
 	try {
 		new PerformanceObserver((list) => {
 			list.getEntries().forEach((entry) => {
-				const shift = entry;
-				if (shift.value !== void 0) console.log(`[StadiumIQ Vitals] CLS entry: ${shift.value.toFixed(4)}`);
+				console.log("[Vitals] CLS:", entry.value.toFixed(4));
 			});
 		}).observe({
 			type: "layout-shift",
 			buffered: true
 		});
-	} catch {}
+	} catch (e) {}
 	try {
 		new PerformanceObserver((list) => {
 			list.getEntries().forEach((entry) => {
 				const fid = entry;
-				if (fid.processingStart !== void 0) {
-					const delay = fid.processingStart - entry.startTime;
-					console.log(`[StadiumIQ Vitals] FID: ${Math.round(delay)}ms`);
-				}
+				console.log("[Vitals] FID:", Math.round(fid.processingStart - fid.startTime), "ms");
 			});
 		}).observe({
 			type: "first-input",
 			buffered: true
 		});
-	} catch {}
-}
+	} catch (e) {}
+};
+/**
+* Schedules non-critical work during browser idle time
+* @param {Function} callback - Work to perform when browser is idle
+* @param {number} timeout - Maximum wait time in ms (default: 2000)
+*/
+var scheduleIdleWork = (callback, timeout = 2e3) => {
+	if ("requestIdleCallback" in window) requestIdleCallback(callback, { timeout });
+	else setTimeout(callback, 0);
+};
 /**
 * @fileoverview Navbar component for StadiumIQ.
 * Renders the sticky top navigation bar with skip-to-main link,
@@ -138,6 +129,15 @@ var links = [
 * @returns {JSX.Element} The sticky header navigation element
 */
 function NavbarBase() {
+	const [mobileMenuOpen, setMobileMenuOpen] = (0, import_react.useState)(false);
+	const [currentPage, setCurrentPage] = (0, import_react.useState)("/");
+	const handleNavClick = (0, import_react.useCallback)((page) => {
+		setCurrentPage(page);
+		setMobileMenuOpen(false);
+	}, []);
+	const handleMobileToggle = (0, import_react.useCallback)(() => {
+		setMobileMenuOpen((prev) => !prev);
+	}, []);
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("header", {
 		role: "banner",
 		className: "sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-xl",
@@ -178,16 +178,18 @@ function NavbarBase() {
 						children: l.label
 					}) }, l.to))
 				}),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("details", {
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 					className: "relative md:hidden",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("summary", {
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
 						"aria-label": "Open menu",
+						onClick: handleMobileToggle,
 						className: "cursor-pointer list-none rounded-md border border-border px-3 py-2 text-sm",
 						children: "Menu"
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", {
+					}), mobileMenuOpen && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", {
 						className: "absolute right-0 mt-2 w-48 rounded-lg border border-border bg-popover p-2 shadow-xl",
 						children: links.map((l) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, {
 							to: l.to,
+							onClick: () => handleNavClick(l.to),
 							className: "block rounded-md px-3 py-2 text-sm text-popover-foreground hover:bg-accent",
 							children: l.label
 						}) }, l.to))
@@ -218,8 +220,8 @@ var createSsrRpc = (functionId) => {
 /**
 * @fileoverview Chat server function for StadiumIQ.
 * Exposes a TanStack Start server function that forwards chat messages
-* to the Lovable AI gateway (backed by Google Gemini) with input validation,
-* rate-limit error handling, and language-aware system prompting.
+* to the xAI Grok API with input validation, rate-limit error handling,
+* and language-aware system prompting.
 *
 * @module chat.functions
 */
@@ -237,8 +239,8 @@ var ChatInput = objectType({
 	language: stringType().max(20).optional()
 });
 /**
-* TanStack Start server function — proxies a chat conversation to the Gemini model
-* via the Lovable AI gateway. Runs exclusively on the server, keeping the API key
+* TanStack Start server function — proxies a chat conversation to the Grok model
+* via the xAI API. Runs exclusively on the server, keeping the API key
 * out of the client bundle.
 *
 * @param {{ data: z.infer<typeof ChatInput> }} input - Validated chat payload
@@ -307,7 +309,7 @@ function AIAssistant({ seedMessage }) {
 	const scrollRef = (0, import_react.useRef)(null);
 	const chat = useServerFn(chatWithStadiumIQ);
 	/** Debounced input value — used for character counter to reduce renders */
-	const debouncedInput = useDebounce(input, 150);
+	const debouncedInput = useDebounce(input, 300);
 	(0, import_react.useEffect)(() => {
 		if (seedMessage && open) setInput(seedMessage);
 	}, [seedMessage, open]);
@@ -328,7 +330,7 @@ function AIAssistant({ seedMessage }) {
 	*
 	* @returns {Promise<void>}
 	*/
-	const send = (0, import_react.useCallback)(async () => {
+	const handleSend = (0, import_react.useCallback)(async () => {
 		const clean = sanitizeInput(input.trim());
 		if (!clean) return;
 		const now = Date.now();
@@ -372,21 +374,24 @@ function AIAssistant({ seedMessage }) {
 	* @param {React.KeyboardEvent<HTMLTextAreaElement>} e - Keyboard event
 	* @returns {void}
 	*/
-	const onKey = (0, import_react.useCallback)((e) => {
+	const handleKeyDown = (0, import_react.useCallback)((e) => {
 		if (e.key === "Enter" && !e.shiftKey) {
 			e.preventDefault();
-			send();
+			handleSend();
 		}
-	}, [send]);
+	}, [handleSend]);
 	/**
 	* Toggles the chat panel open or closed.
 	*
 	* @returns {void}
 	*/
-	const toggleOpen = (0, import_react.useCallback)(() => setOpen((o) => !o), []);
+	const handleToggle = (0, import_react.useCallback)(() => setOpen((o) => !o), []);
+	const handleLanguageChange = (0, import_react.useCallback)((langToSet) => {
+		setLang(langToSet);
+	}, []);
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
 		"aria-label": open ? "Close AI assistant" : "Open AI assistant chat",
-		onClick: toggleOpen,
+		onClick: handleToggle,
 		className: "fixed bottom-6 right-6 z-50 grid size-14 place-items-center rounded-full bg-primary text-primary-foreground shadow-2xl shadow-primary/40 transition-transform hover:scale-105",
 		children: open ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(X, { className: "size-6" }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(MessageCircle, { className: "size-6" })
 	}), open && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
@@ -396,20 +401,28 @@ function AIAssistant({ seedMessage }) {
 		children: [
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				className: "flex items-center justify-between border-b border-border bg-navy px-4 py-3",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
 					className: "text-sm font-bold text-primary",
-					children: "StadiumIQ"
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-					className: "text-[11px] text-muted-foreground",
-					children: "Multilingual AI Assistance"
+					children: "AI Multilingual Assistance"
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
+					className: "text-[10px] text-muted-foreground mt-0.5",
+					children: [
+						"Powered by Grok AI · Available in 5 languages ·",
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("br", {}),
+						"Navigation, crowd management, accessibility support"
+					]
 				})] }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("select", {
 					"aria-label": "Language",
 					value: lang,
-					onChange: (e) => setLang(e.target.value),
+					onChange: (e) => handleLanguageChange(e.target.value),
 					className: "rounded-md border border-border bg-input px-2 py-1 text-xs",
-					children: LANGUAGES.map((l) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("option", {
-						value: l.label,
-						children: l.label
+					children: LANGUAGES.map((l) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("option", {
+						value: l.name,
+						children: [
+							l.flag,
+							" ",
+							l.name
+						]
 					}, l.code))
 				})]
 			}),
@@ -446,13 +459,16 @@ function AIAssistant({ seedMessage }) {
 						"aria-label": "Message StadiumIQ",
 						value: input,
 						onChange: (e) => setInput(e.target.value.slice(0, 300)),
-						onKeyDown: onKey,
+						onKeyDown: handleKeyDown,
 						rows: 2,
 						placeholder: "Ask about gates, matches, transport…",
+						"data-gramm": "false",
+						"data-gramm_editor": "false",
+						"data-enable-grammarly": "false",
 						className: "flex-1 resize-none rounded-lg border border-border bg-input px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
 						"aria-label": "Send message",
-						onClick: send,
+						onClick: handleSend,
 						disabled: !canSend,
 						className: "grid size-10 place-items-center rounded-lg bg-primary text-primary-foreground disabled:opacity-40",
 						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Send, { className: "size-4" })
@@ -639,7 +655,7 @@ var Route$6 = createRootRouteWithContext()({
 			{ title: `${APP_SHORT} — GenAI Smart Stadium & Tournament Operations · FIFA World Cup 2026` },
 			{
 				name: "description",
-				content: "StadiumIQ: GenAI-enabled stadium operations for FIFA World Cup 2026. Real-time crowd management, multilingual AI assistance, navigation, transport, accessibility, and operational intelligence for fans, organizers, volunteers, and venue staff."
+				content: "StadiumIQ: A GenAI-enabled solution enhancing FIFA World Cup 2026 stadium operations. AI-powered navigation, crowd management, accessibility, transportation, multilingual assistance, and real-time decision support for fans, organizers, volunteers, and staff."
 			},
 			{
 				name: "author",
@@ -663,10 +679,26 @@ var Route$6 = createRootRouteWithContext()({
 			},
 			{
 				name: "keywords",
-				content: "stadium AI, FIFA World Cup 2026, crowd management, multilingual assistance, real-time decision support, tournament operations, operational intelligence, accessibility"
+				content: "FIFA World Cup 2026, stadium operations, crowd management, GenAI, navigation, accessibility, transportation, multilingual, real-time decision support, operational intelligence"
+			},
+			{
+				name: "theme-color",
+				content: "#0A1628"
+			},
+			{
+				name: "mobile-web-app-capable",
+				content: "yes"
+			},
+			{
+				name: "apple-mobile-web-app-status-bar-style",
+				content: "black"
 			}
 		],
 		links: [
+			{
+				rel: "manifest",
+				href: "/manifest.json"
+			},
 			{
 				rel: "stylesheet",
 				href: styles_default
@@ -678,19 +710,11 @@ var Route$6 = createRootRouteWithContext()({
 			},
 			{
 				rel: "dns-prefetch",
-				href: "https://ai.gateway.lovable.dev"
+				href: "https://api.x.ai"
 			},
 			{
 				rel: "preconnect",
-				href: "https://ai.gateway.lovable.dev"
-			},
-			{
-				rel: "dns-prefetch",
-				href: "https://generativelanguage.googleapis.com"
-			},
-			{
-				rel: "preconnect",
-				href: "https://generativelanguage.googleapis.com"
+				href: "https://api.x.ai"
 			},
 			{
 				rel: "dns-prefetch",
@@ -698,7 +722,13 @@ var Route$6 = createRootRouteWithContext()({
 			},
 			{
 				rel: "preconnect",
-				href: "https://fonts.gstatic.com"
+				href: "https://fonts.googleapis.com",
+				crossOrigin: "anonymous"
+			},
+			{
+				rel: "preload",
+				as: "script",
+				href: "/src/main.tsx"
 			}
 		]
 	}),
@@ -737,9 +767,9 @@ function RootComponent() {
 		initVitals();
 	}, []);
 	(0, import_react.useEffect)(() => {
-		if ("requestIdleCallback" in window) requestIdleCallback(() => {
+		scheduleIdleWork(() => {
 			console.log(`[${APP_SHORT}] Preloading secondary resources during idle time`);
-		}, { timeout: 2e3 });
+		});
 	}, []);
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(QueryClientProvider, {
 		client: queryClient,
@@ -769,9 +799,9 @@ function RootComponent() {
 *
 * @module routes/transport
 */
-var $$splitComponentImporter$5 = () => import("./transport-vIsC8wQm.mjs");
+var $$splitComponentImporter$5 = () => import("./transport-BsXasZhw.mjs");
 var Route$5 = createFileRoute("/transport")({
-	head: () => ({ meta: [{ title: "Transportation Hub — StadiumIQ · FIFA World Cup 2026" }, {
+	head: () => ({ meta: [{ title: "Transportation Hub — Route Planning" }, {
 		name: "description",
 		content: "StadiumIQ Transportation Hub: real-time metro, bus, rideshare, and parking info for your matchday at FIFA World Cup 2026."
 	}] }),
@@ -783,9 +813,9 @@ var Route$5 = createFileRoute("/transport")({
 *
 * @module routes/staff
 */
-var $$splitComponentImporter$4 = () => import("./staff-EJ6E5DQy.mjs");
+var $$splitComponentImporter$4 = () => import("./staff-Cqwmu4FG.mjs");
 var Route$4 = createFileRoute("/staff")({
-	head: () => ({ meta: [{ title: "Operational Intelligence — StadiumIQ Staff Portal · FIFA 2026" }, {
+	head: () => ({ meta: [{ title: "Operational Intelligence — Staff Portal" }, {
 		name: "description",
 		content: "StadiumIQ Operational Intelligence: staff and volunteer zone management, incident reporting, backup requests, and real-time activity log for FIFA World Cup 2026."
 	}] }),
@@ -797,9 +827,9 @@ var Route$4 = createFileRoute("/staff")({
 *
 * @module routes/schedule
 */
-var $$splitComponentImporter$3 = () => import("./schedule-PpvAAZaE.mjs");
+var $$splitComponentImporter$3 = () => import("./schedule-CXCoIA0t.mjs");
 var Route$3 = createFileRoute("/schedule")({
-	head: () => ({ meta: [{ title: "Match Schedule — StadiumIQ · FIFA World Cup 2026" }, {
+	head: () => ({ meta: [{ title: "Match Schedule — FIFA World Cup 2026" }, {
 		name: "description",
 		content: "StadiumIQ match schedule: all FIFA World Cup 2026 fixtures with live countdown timers, group and venue filters, and real-time status updates."
 	}] }),
@@ -811,9 +841,9 @@ var Route$3 = createFileRoute("/schedule")({
 *
 * @module routes/map
 */
-var $$splitComponentImporter$2 = () => import("./map-DFppPlQ7.mjs");
+var $$splitComponentImporter$2 = () => import("./map-DUtaR8_L.mjs");
 var Route$2 = createFileRoute("/map")({
-	head: () => ({ meta: [{ title: "Interactive Stadium Map — StadiumIQ · FIFA World Cup 2026" }, {
+	head: () => ({ meta: [{ title: "Stadium Navigation & Zone Map" }, {
 		name: "description",
 		content: "StadiumIQ interactive map: live crowd levels, facilities, accessible routes, and directions for all stadium zones at FIFA World Cup 2026."
 	}] }),
@@ -825,9 +855,9 @@ var Route$2 = createFileRoute("/map")({
 *
 * @module routes/accessibility
 */
-var $$splitComponentImporter$1 = () => import("./accessibility-Bo3gAH9Z.mjs");
+var $$splitComponentImporter$1 = () => import("./accessibility-BrPbdygF.mjs");
 var Route$1 = createFileRoute("/accessibility")({
-	head: () => ({ meta: [{ title: "Multilingual Assistance & Accessibility — StadiumIQ · FIFA 2026" }, {
+	head: () => ({ meta: [{ title: "Accessibility Guide — Inclusive Stadium Experience" }, {
 		name: "description",
 		content: "StadiumIQ accessibility guide: wheelchair routes, hearing loops, quiet zones, high-contrast mode, large text, and multilingual assistance for FIFA World Cup 2026."
 	}] }),
@@ -840,9 +870,9 @@ var Route$1 = createFileRoute("/accessibility")({
 *
 * @module routes/index
 */
-var $$splitComponentImporter = () => import("./routes-COIcqu_G.mjs");
+var $$splitComponentImporter = () => import("./routes-ByezCkpX.mjs");
 var Route = createFileRoute("/")({
-	head: () => ({ meta: [{ title: "StadiumIQ — Crowd Management System & Real-time Decision Support · FIFA 2026" }, {
+	head: () => ({ meta: [{ title: "StadiumIQ — Smart Stadium Operations" }, {
 		name: "description",
 		content: "StadiumIQ home dashboard: live crowd management, real-time AI decision support, match schedule, and emergency alerts for FIFA World Cup 2026."
 	}] }),

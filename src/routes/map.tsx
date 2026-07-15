@@ -6,12 +6,15 @@
  */
 
 import { createFileRoute } from "@tanstack/react-router";
-import { StadiumMap } from "@/components/StadiumMap";
+import { lazy, Suspense } from "react";
+import PageSkeleton from "@/components/PageSkeleton";
+
+const StadiumMap = lazy(() => import("@/components/StadiumMap").then(m => ({ default: m.StadiumMap || m.default })));
 
 export const Route = createFileRoute("/map")({
   head: () => ({
     meta: [
-      { title: "Interactive Stadium Map — StadiumIQ · FIFA World Cup 2026" },
+      { title: "Stadium Navigation & Zone Map" },
       {
         name: "description",
         content:
@@ -19,5 +22,9 @@ export const Route = createFileRoute("/map")({
       },
     ],
   }),
-  component: () => <StadiumMap />,
+  component: () => (
+    <Suspense fallback={<PageSkeleton />}>
+      <StadiumMap />
+    </Suspense>
+  ),
 });

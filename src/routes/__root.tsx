@@ -19,7 +19,7 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
-import { initVitals } from "../lib/vitals";
+import { initVitals, scheduleIdleWork } from "../lib/vitals";
 import { Navbar } from "@/components/Navbar";
 import { AIAssistant } from "@/components/AIAssistant";
 import ErrorBoundary from "@/components/ErrorBoundary";
@@ -94,7 +94,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         name: "description",
         content:
-          "StadiumIQ: GenAI-enabled stadium operations for FIFA World Cup 2026. Real-time crowd management, multilingual AI assistance, navigation, transport, accessibility, and operational intelligence for fans, organizers, volunteers, and venue staff.",
+          "StadiumIQ: A GenAI-enabled solution enhancing FIFA World Cup 2026 stadium operations. AI-powered navigation, crowd management, accessibility, transportation, multilingual assistance, and real-time decision support for fans, organizers, volunteers, and staff.",
       },
       { name: "author", content: APP_NAME },
       { property: "og:title", content: `${APP_SHORT} — FIFA World Cup 2026` },
@@ -107,17 +107,21 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         name: "keywords",
         content:
-          "stadium AI, FIFA World Cup 2026, crowd management, multilingual assistance, real-time decision support, tournament operations, operational intelligence, accessibility",
+          "FIFA World Cup 2026, stadium operations, crowd management, GenAI, navigation, accessibility, transportation, multilingual, real-time decision support, operational intelligence",
       },
+      { name: "theme-color", content: "#0A1628" },
+      { name: "mobile-web-app-capable", content: "yes" },
+      { name: "apple-mobile-web-app-status-bar-style", content: "black" },
     ],
     links: [
+      { rel: "manifest", href: "/manifest.json" },
       { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
-      // Resource hints for performance — DNS resolution and connection handshake happen early
       { rel: "dns-prefetch", href: "https://api.x.ai" },
       { rel: "preconnect", href: "https://api.x.ai" },
       { rel: "dns-prefetch", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com" },
+      { rel: "preconnect", href: "https://fonts.googleapis.com", crossOrigin: "anonymous" },
+      { rel: "preload", as: "script", href: "/src/main.tsx" },
     ],
   }),
   shellComponent: RootShell,
@@ -168,14 +172,9 @@ function RootComponent() {
 
   // Schedule non-critical work during browser idle time
   useEffect(() => {
-    if ("requestIdleCallback" in window) {
-      requestIdleCallback(
-        () => {
-          console.log(`[${APP_SHORT}] Preloading secondary resources during idle time`);
-        },
-        { timeout: 2000 },
-      );
-    }
+    scheduleIdleWork(() => {
+      console.log(`[${APP_SHORT}] Preloading secondary resources during idle time`);
+    });
   }, []);
 
   return (

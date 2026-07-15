@@ -6,12 +6,15 @@
  */
 
 import { createFileRoute } from "@tanstack/react-router";
-import { StaffPortal } from "@/components/StaffPortal";
+import { lazy, Suspense } from "react";
+import PageSkeleton from "@/components/PageSkeleton";
+
+const StaffPortal = lazy(() => import("@/components/StaffPortal").then(m => ({ default: m.StaffPortal || m.default })));
 
 export const Route = createFileRoute("/staff")({
   head: () => ({
     meta: [
-      { title: "Operational Intelligence — StadiumIQ Staff Portal · FIFA 2026" },
+      { title: "Operational Intelligence — Staff Portal" },
       {
         name: "description",
         content:
@@ -19,5 +22,9 @@ export const Route = createFileRoute("/staff")({
       },
     ],
   }),
-  component: () => <StaffPortal />,
+  component: () => (
+    <Suspense fallback={<PageSkeleton />}>
+      <StaffPortal />
+    </Suspense>
+  ),
 });

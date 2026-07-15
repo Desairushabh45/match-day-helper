@@ -7,14 +7,17 @@
  */
 
 import { createFileRoute } from "@tanstack/react-router";
-import { EmergencyAlerts } from "@/components/EmergencyAlerts";
-import { CrowdDashboard } from "@/components/CrowdDashboard";
-import { MatchSchedule } from "@/components/MatchSchedule";
+import { lazy, Suspense } from "react";
+import PageSkeleton from "@/components/PageSkeleton";
+
+const EmergencyAlerts = lazy(() => import("@/components/EmergencyAlerts").then(m => ({ default: m.EmergencyAlerts || m.default })));
+const CrowdDashboard = lazy(() => import("@/components/CrowdDashboard").then(m => ({ default: m.CrowdDashboard || m.default })));
+const MatchSchedule = lazy(() => import("@/components/MatchSchedule").then(m => ({ default: m.MatchSchedule || m.default })));
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "StadiumIQ — Crowd Management System & Real-time Decision Support · FIFA 2026" },
+      { title: "StadiumIQ — Smart Stadium Operations" },
       {
         name: "description",
         content:
@@ -35,25 +38,29 @@ export const Route = createFileRoute("/")({
 function Home() {
   return (
     <div className="space-y-8">
-      <EmergencyAlerts />
-      <section
-        aria-label="Hero"
-        className="rounded-2xl border border-border bg-gradient-to-br from-navy to-navy/60 p-8 shadow-2xl shadow-black/40"
-      >
-        <div className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">
-          FIFA World Cup 2026
-        </div>
-        <h1 className="mt-2 text-4xl font-black leading-tight sm:text-5xl">
-          Your <span className="text-primary">AI-powered</span> stadium concierge
-        </h1>
-        <p className="mt-3 max-w-2xl text-sm text-muted-foreground sm:text-base">
-          StadiumIQ helps fans, staff, and volunteers navigate the world's biggest tournament —
-          real-time decision support for crowd management, transport, accessibility, and
-          multilingual match assistance all in one place.
-        </p>
-      </section>
-      <CrowdDashboard />
-      <MatchSchedule />
+      <Suspense fallback={<PageSkeleton />}>
+        <EmergencyAlerts />
+        <section
+          aria-label="Hero"
+          className="rounded-2xl border border-border bg-gradient-to-br from-navy to-navy/60 p-8 shadow-2xl shadow-black/40"
+        >
+          <div className="text-center mb-6">
+            <span className="bg-[#fef3c7] text-[#92400e] px-4 py-2 rounded-full text-sm font-semibold">
+              ⚽ FIFA World Cup 2026 — Official Smart Stadium Assistant
+            </span>
+          </div>
+          <h1 className="mt-2 text-4xl font-black leading-tight sm:text-5xl">
+            StadiumIQ
+          </h1>
+          <p className="mt-3 max-w-2xl text-sm text-muted-foreground sm:text-base">
+            GenAI-enabled solution enhancing stadium operations and 
+            tournament experience for fans, organizers, volunteers, 
+            and venue staff
+          </p>
+        </section>
+        <CrowdDashboard />
+        <MatchSchedule />
+      </Suspense>
     </div>
   );
 }
