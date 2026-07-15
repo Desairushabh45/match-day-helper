@@ -1,29 +1,24 @@
 import { render, screen, fireEvent } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
-import { AccessibilityGuide } from './AccessibilityGuide'
+import { StadiumMap } from './StadiumMap'
 
-describe('AccessibilityGuide', () => {
+describe('StadiumMap', () => {
   it('renders without crashing', () => {
-    render(<AccessibilityGuide />)
+    render(<StadiumMap />)
     expect(document.body).toBeTruthy()
   })
-  it('shows accessibility features', () => {
-    render(<AccessibilityGuide />)
+  it('shows map content', () => {
+    render(<StadiumMap />)
     expect(document.body.innerHTML.length).toBeGreaterThan(100)
   })
-  it('has toggle buttons', () => {
-    render(<AccessibilityGuide />)
-    const buttons = screen.getAllByRole('button')
-    expect(buttons.length).toBeGreaterThan(0)
-  })
-  it('high contrast toggle works', () => {
-    render(<AccessibilityGuide />)
+  it('has clickable zones', () => {
+    render(<StadiumMap />)
     const buttons = screen.getAllByRole('button')
     if (buttons.length > 0) fireEvent.click(buttons[0])
     expect(document.body).toBeTruthy()
   })
-  it('large text toggle works', () => {
-    render(<AccessibilityGuide />)
+  it('shows zone details on click', () => {
+    render(<StadiumMap />)
     const buttons = screen.getAllByRole('button')
     if (buttons.length > 1) fireEvent.click(buttons[1])
     expect(document.body).toBeTruthy()

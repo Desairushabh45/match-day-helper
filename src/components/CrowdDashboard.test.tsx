@@ -5,7 +5,7 @@ import { CrowdDashboard } from "./CrowdDashboard";
 describe("CrowdDashboard", () => {
   it("renders without crashing", () => {
     render(<CrowdDashboard />);
-    expect(screen.getByRole("heading", { name: /Live Crowd Dashboard/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /Crowd Management System/i })).toBeInTheDocument();
   });
   it("has a refresh button", () => {
     render(<CrowdDashboard />);
@@ -14,7 +14,7 @@ describe("CrowdDashboard", () => {
   it("refresh click keeps dashboard rendered", () => {
     render(<CrowdDashboard />);
     fireEvent.click(screen.getByRole("button", { name: /refresh/i }));
-    expect(screen.getByRole("heading", { name: /Live Crowd Dashboard/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /Crowd Management System/i })).toBeInTheDocument();
   });
   it("shows an AI recommendation", () => {
     render(<CrowdDashboard />);
