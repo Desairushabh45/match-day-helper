@@ -25,13 +25,13 @@ describe("sanitizeInput", () => {
 
 describe("getCrowdColor", () => {
   it("returns danger tokens for HIGH", () => {
-    expect(getCrowdColor("HIGH")).toContain("danger");
+    expect(getCrowdColor("HIGH")).toContain("red");
   });
   it("returns warning tokens for MEDIUM", () => {
-    expect(getCrowdColor("MEDIUM")).toContain("warning");
+    expect(getCrowdColor("MEDIUM")).toContain("yellow");
   });
   it("returns success tokens for LOW", () => {
-    expect(getCrowdColor("LOW")).toContain("success");
+    expect(getCrowdColor("LOW")).toContain("green");
   });
 });
 
@@ -66,7 +66,7 @@ describe("generateCrowdData", () => {
       expect(z.capacity).toBeGreaterThanOrEqual(0);
       expect(z.capacity).toBeLessThanOrEqual(100);
       expect(["LOW", "MEDIUM", "HIGH"]).toContain(z.level);
-      expect(z.wait).toBeGreaterThanOrEqual(0);
+      expect(z.waitTime).toBeGreaterThanOrEqual(0);
     }
   });
   it("is deterministic for the same tick", () => {
