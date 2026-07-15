@@ -103,8 +103,8 @@ function CrowdDashboardBase() {
             <div className="font-semibold text-primary">AI Recommendation</div>
             <div className="text-muted-foreground">
               Least crowded entrance right now:{" "}
-              <span className="font-semibold text-foreground">{leastCrowded.zone}</span> (
-              {leastCrowded.capacity}% capacity, {formatWaitTime(leastCrowded.wait)}) · Avg
+              <span className="font-semibold text-foreground">{leastCrowded.name}</span> (
+              {leastCrowded.capacity}% capacity, {formatWaitTime(leastCrowded.waitTime)}) · Avg
               capacity: {crowdStats.avgCapacity}%
             </div>
           </div>
@@ -114,11 +114,11 @@ function CrowdDashboardBase() {
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {data.map((z) => (
           <article
-            key={z.zone}
+            key={z.id}
             className="rounded-xl border border-border bg-card p-4 shadow-lg shadow-black/20 transition-transform hover:-translate-y-0.5"
           >
             <div className="flex items-start justify-between">
-              <h3 className="font-semibold">{z.zone}</h3>
+              <h3 className="font-semibold">{z.name}</h3>
               <span
                 className={`rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${getCrowdColor(z.level)}`}
               >
@@ -135,7 +135,7 @@ function CrowdDashboardBase() {
             </div>
             <div className="mt-2 flex items-center justify-between text-xs">
               <span className="text-muted-foreground">{z.capacity}% full</span>
-              <span className="font-medium">{formatWaitTime(z.wait)}</span>
+              <span className="font-medium">{formatWaitTime(z.waitTime)}</span>
             </div>
           </article>
         ))}

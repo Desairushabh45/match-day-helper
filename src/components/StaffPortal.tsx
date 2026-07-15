@@ -7,7 +7,8 @@
  */
 
 import { memo, useCallback, useState } from "react";
-import { ZONES, type Zone, type CrowdLevel } from "@/lib/constants";
+import { ZONES } from "@/lib/constants";
+import type { Zone, ActivityLog } from "@/types";
 
 /**
  * Core staff operations portal component — Operational Intelligence hub.
@@ -18,20 +19,21 @@ import { ZONES, type Zone, type CrowdLevel } from "@/lib/constants";
  * @returns {JSX.Element} The two-column staff portal section
  */
 function StaffPortalBase() {
-  const [zone, setZone] = useState<Zone>(ZONES[0]);
-  const [level, setLevel] = useState<CrowdLevel>("MEDIUM");
+  const [zone, setZone] = useState<string>(ZONES[0]);
+  const [level, setLevel] = useState<Zone["level"]>("MEDIUM");
   const [note, setNote] = useState("");
-  const [log, setLog] = useState<string[]>([]);
+  const [log, setLog] = useState<ActivityLog[]>([]);
 
   /**
    * Appends a timestamped entry to the activity log.
    * Caps the log at 20 entries to prevent unbounded growth.
    *
-   * @param {string} label - The action description to log
+   * @param {string} action - The action description to log
+   * @param {string} [z] - The zone it applies to
    * @returns {void}
    */
-  const addLogEntry = useCallback((label: string) => {
-    setLog((l) => [`[${new Date().toLocaleTimeString()}] ${label}`, ...l].slice(0, 20));
+  const addLogEntry = useCallback((action: string, z?: string) => {
+    setLog((l) => [{ id: Date.now(), action, zone: z, timestamp: new Date() }, ...l].slice(0, 20));
   }, []);
 
   /**
@@ -45,8 +47,8 @@ function StaffPortalBase() {
   const submit = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault();
-      const entry = `${zone} → ${level}${note ? ` · ${note}` : ""}`;
-      addLogEntry(entry);
+      const action = `Status updated to ${level}${note ? ` · ${note}` : ""}`;
+      addLogEntry(action, zone);
       setNote("");
     },
     [zone, level, note, addLogEntry],
@@ -62,9 +64,9 @@ function StaffPortalBase() {
    */
   const quick = useCallback(
     (label: string) => {
-      addLogEntry(label);
+      addLogEntry(label, zone);
     },
-    [addLogEntry],
+    [addLogEntry, zone],
   );
 
   return (
@@ -88,7 +90,7 @@ function StaffPortalBase() {
             <select
               id="staff-zone"
               value={zone}
-              onChange={(e) => setZone(e.target.value as Zone)}
+              onChange={(e) => setZone(e.target.value)}
               className="mt-1 w-full rounded-md border border-border bg-input px-3 py-2 text-sm"
             >
               {ZONES.map((z) => (
@@ -106,7 +108,7 @@ function StaffPortalBase() {
             <select
               id="staff-level"
               value={level}
-              onChange={(e) => setLevel(e.target.value as CrowdLevel)}
+              onChange={(e) => setLevel(e.target.value as Zone["level"])}
               className="mt-1 w-full rounded-md border border-border bg-input px-3 py-2 text-sm"
             >
               <option>LOW</option>
@@ -166,9 +168,9 @@ function StaffPortalBase() {
         <h3 className="font-semibold text-primary">Activity log</h3>
         <ul aria-live="polite" className="mt-3 space-y-1.5 text-sm">
           {log.length === 0 && <li className="text-muted-foreground">No activity yet.</li>}
-          {log.map((l, i) => (
-            <li key={i} className="rounded-md bg-accent px-3 py-1.5 font-mono text-xs">
-              {l}
+          {log.map((l) => (
+            <li key={l.id} className="rounded-md bg-accent px-3 py-1.5 font-mono text-xs">
+              [{l.timestamp.toLocaleTimeString()}] {l.zone ? `${l.zone} → ` : ""}{l.action}
             </li>
           ))}
         </ul>

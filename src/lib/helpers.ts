@@ -9,39 +9,24 @@ import type { CrowdLevel } from "./constants";
 import { MAX_CHAT_LENGTH } from "./constants";
 
 /**
- * Strips HTML tags from user input and enforces a maximum character length
- * before the text is forwarded to the AI assistant.
- * Prevents XSS payloads and token budget overruns.
- *
- * @param {string} text - Raw user input string, potentially containing HTML
- * @param {number} [maxLength=MAX_CHAT_LENGTH] - Maximum allowed character count
- * @returns {string} Sanitized plain-text string, truncated to `maxLength`
- *
- * @example
- * sanitizeInput("<script>alert(1)</script>Hello") // → "Hello"
- * sanitizeInput("Long text...", 10) // → "Long text."
+ * Sanitizes user input by removing HTML tags and limiting length
+ * @param {string} text - Raw input text from user
+ * @param {number} maxLength - Maximum allowed characters (default: 300)
+ * @returns {string} Sanitized text safe for AI processing
  */
-export const sanitizeInput = (text: string, maxLength: number = MAX_CHAT_LENGTH): string =>
-  text.replace(/<[^>]*>/g, "").slice(0, maxLength);
+export const sanitizeInput = (text: string, maxLength = 300): string => {
+  return text.replace(/<[^>]*>/g, '').slice(0, maxLength)
+}
 
 /**
- * Returns Tailwind CSS class tokens for a crowd level badge.
- * Covers background, text colour, and border using semantic colour tokens
- * defined in the global stylesheet (danger / warning / success).
- *
- * @param {CrowdLevel} level - Crowd density level ("LOW" | "MEDIUM" | "HIGH")
- * @returns {string} Space-separated Tailwind class string for the badge element
- *
- * @example
- * getCrowdColor("HIGH")   // → "bg-danger/20 text-danger border-danger/40"
- * getCrowdColor("MEDIUM") // → "bg-warning/20 text-warning border-warning/40"
- * getCrowdColor("LOW")    // → "bg-success/20 text-success border-success/40"
+ * Returns Tailwind CSS color class based on crowd density level
+ * @param {string} level - Crowd level: 'LOW' | 'MEDIUM' | 'HIGH'
+ * @returns {string} Tailwind color class string
  */
-export const getCrowdColor = (level: CrowdLevel): string => {
-  if (level === "HIGH") return "bg-danger/20 text-danger border-danger/40";
-  if (level === "MEDIUM") return "bg-warning/20 text-warning border-warning/40";
-  return "bg-success/20 text-success border-success/40";
-};
+export const getCrowdColor = (level: string): string => {
+  const colors = { LOW: 'text-green-500', MEDIUM: 'text-yellow-500', HIGH: 'text-red-500' }
+  return colors[level as keyof typeof colors] ?? 'text-gray-500'
+}
 
 /**
  * Returns the Tailwind CSS background-colour class for the capacity progress bar.
@@ -61,22 +46,14 @@ export const getCrowdBar = (level: CrowdLevel): string => {
 };
 
 /**
- * Formats a raw wait-time number (in minutes) into a human-readable string
- * suitable for display in the crowd dashboard and stadium map panels.
- *
- * @param {number} minutes - Wait time in minutes (non-negative integer)
- * @returns {string} Localised, friendly wait-time string
- *
- * @example
- * formatWaitTime(0)  // → "No wait"
- * formatWaitTime(1)  // → "1 min wait"
- * formatWaitTime(12) // → "12 min wait"
+ * Formats wait time in minutes to human readable string
+ * @param {number} minutes - Wait time in minutes
+ * @returns {string} Formatted string like "5 min wait" or "No wait"
  */
 export const formatWaitTime = (minutes: number): string => {
-  if (minutes <= 0) return "No wait";
-  if (minutes === 1) return "1 min wait";
-  return `${minutes} min wait`;
-};
+  if (minutes === 0) return 'No wait'
+  return `${minutes} min wait`
+}
 
 /**
  * Deterministic pseudo-random number generator seeded with an integer.
@@ -96,17 +73,7 @@ const seeded = (seed: number): (() => number) => {
   };
 };
 
-/** Shape of a single zone's crowd data snapshot */
-export interface ZoneData {
-  /** Zone display name (matches ZONES constant) */
-  zone: string;
-  /** Current density level */
-  level: CrowdLevel;
-  /** Estimated wait time at this zone in minutes */
-  wait: number;
-  /** Percentage of capacity currently occupied (0–100) */
-  capacity: number;
-}
+import type { Zone } from "@/types";
 
 /**
  * Generates a snapshot of simulated crowd data for all stadium zones.
@@ -115,23 +82,23 @@ export interface ZoneData {
  *
  * @param {readonly string[]} zones - Array of zone name strings (from ZONES constant)
  * @param {number} tick - Auto-incrementing refresh counter used as the random seed
- * @returns {ZoneData[]} Array of zone data objects, one per zone
+ * @returns {Zone[]} Array of zone data objects, one per zone
  *
  * @example
  * const zones = generateCrowdData(ZONES, tick);
- * // zones[0] → { zone: "North Gate", level: "MEDIUM", wait: 8, capacity: 62 }
+ * // zones[0] → { id: "...", name: "North Gate", level: "MEDIUM", waitTime: 8, capacity: 62 }
  */
-export const generateCrowdData = (zones: readonly string[], tick: number): ZoneData[] => {
+export const generateCrowdData = (zones: readonly string[], tick: number): Zone[] => {
   return zones.map((zone, i) => {
     const r = seeded(tick + i * 13)();
     const capacity = Math.min(100, Math.round(30 + r * 70));
-    const level: CrowdLevel = capacity > 75 ? "HIGH" : capacity > 45 ? "MEDIUM" : "LOW";
-    const wait =
+    const level: Zone["level"] = capacity > 75 ? "HIGH" : capacity > 45 ? "MEDIUM" : "LOW";
+    const waitTime =
       level === "HIGH"
         ? 15 + Math.round(r * 20)
         : level === "MEDIUM"
           ? 5 + Math.round(r * 10)
           : Math.round(r * 3);
-    return { zone, level, wait, capacity };
+    return { id: `zone-${i}`, name: zone, level, waitTime, capacity };
   });
 };

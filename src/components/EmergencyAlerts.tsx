@@ -10,17 +10,7 @@ import { memo, useCallback, useState } from "react";
 import { AlertTriangle, X } from "lucide-react";
 import { ALERT_TYPES } from "@/lib/constants";
 
-/** Shape of a single emergency alert record */
-interface Alert {
-  /** Unique numeric identifier for the alert */
-  id: number;
-  /** Category of the alert, drawn from {@link ALERT_TYPES} values */
-  type: "Medical" | "Security" | "Weather" | "Evacuation" | "Information";
-  /** Human-readable alert message displayed to the user */
-  message: string;
-  /** Formatted timestamp string for when the alert was issued */
-  timestamp: string;
-}
+import { Alert } from "@/types";
 
 /** Props for the EmergencyAlerts component */
 interface EmergencyAlertsProps {
@@ -37,7 +27,7 @@ const INITIAL: Alert[] = [
     id: 1,
     type: ALERT_TYPES.WEATHER,
     message: "Light rain expected around 8pm — ponchos available at gates.",
-    timestamp: new Date().toLocaleTimeString(),
+    timestamp: new Date(),
   },
 ];
 
@@ -77,7 +67,7 @@ function EmergencyAlertsBase({ onReport }: EmergencyAlertsProps) {
           <AlertTriangle className="mt-0.5 size-5 text-destructive" />
           <div className="flex-1 text-sm">
             <div className="font-semibold text-destructive">
-              {a.type} · {a.timestamp}
+              {a.type} · {a.timestamp.toLocaleTimeString()}
             </div>
             <div className="text-foreground/90">{a.message}</div>
           </div>

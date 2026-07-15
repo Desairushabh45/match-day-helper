@@ -10,17 +10,14 @@ import { memo, useCallback } from "react";
 import { Train, Bus, Car, ParkingSquare } from "lucide-react";
 import { TRANSPORT_TYPES } from "@/lib/constants";
 
-/** A single transport mode configuration entry */
-interface TransportOption {
-  /** Lucide icon component to render */
-  icon: React.ElementType;
-  /** Display name of the transport mode */
-  name: string;
-  /** Live status detail text */
-  detail: string;
-  /** Short status badge text */
-  status: string;
-}
+import type { TransportOption } from "@/types";
+
+const getIcon = (type: string) => {
+  if (type === TRANSPORT_TYPES.METRO) return Train;
+  if (type === TRANSPORT_TYPES.BUS) return Bus;
+  if (type === TRANSPORT_TYPES.TAXI) return Car;
+  return ParkingSquare;
+};
 
 /**
  * Live transport options shown in the hub, keyed to {@link TRANSPORT_TYPES} values.
@@ -28,28 +25,28 @@ interface TransportOption {
  */
 const OPTIONS: TransportOption[] = [
   {
-    icon: Train,
-    name: TRANSPORT_TYPES.METRO,
-    detail: "Next train in 4 min · Line A, B",
+    type: TRANSPORT_TYPES.METRO,
+    nextArrival: "Next train in 4 min · Line A, B",
     status: "On time",
+    waitTime: 4,
   },
   {
-    icon: Bus,
-    name: TRANSPORT_TYPES.BUS,
-    detail: "Route 12 departs in 8 min · 6 stops",
+    type: TRANSPORT_TYPES.BUS,
+    nextArrival: "Route 12 departs in 8 min · 6 stops",
     status: "Frequent",
+    waitTime: 8,
   },
   {
-    icon: Car,
-    name: TRANSPORT_TYPES.TAXI,
-    detail: "Est. wait 3–5 min · Gate W pickup",
+    type: TRANSPORT_TYPES.TAXI,
+    nextArrival: "Est. wait 3–5 min · Gate W pickup",
     status: "Available",
+    waitTime: 4,
   },
   {
-    icon: ParkingSquare,
-    name: TRANSPORT_TYPES.PARKING,
-    detail: "P2: 412 spaces free · P4: full",
+    type: TRANSPORT_TYPES.PARKING,
+    nextArrival: "P2: 412 spaces free · P4: full",
     status: "Limited",
+    waitTime: 0,
   },
 ];
 
@@ -96,20 +93,22 @@ function TransportHubBase({ onPlanRoute }: TransportHubProps) {
         </button>
       </div>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        {OPTIONS.map((o) => (
-          <article key={o.name} className="rounded-xl border border-border bg-card p-4">
+        {OPTIONS.map((o) => {
+          const Icon = getIcon(o.type);
+          return (
+          <article key={o.type} className="rounded-xl border border-border bg-card p-4">
             <div className="flex items-center gap-3">
               <div className="grid size-10 place-items-center rounded-lg bg-primary/15 text-primary">
-                <o.icon className="size-5" />
+                <Icon className="size-5" />
               </div>
               <div>
-                <h3 className="text-sm font-semibold">{o.name}</h3>
+                <h3 className="text-sm font-semibold">{o.type}</h3>
                 <div className="text-[10px] uppercase tracking-widest text-success">{o.status}</div>
               </div>
             </div>
-            <p className="mt-3 text-sm text-muted-foreground">{o.detail}</p>
+            <p className="mt-3 text-sm text-muted-foreground">{o.nextArrival}</p>
           </article>
-        ))}
+        )})}
       </div>
     </section>
   );

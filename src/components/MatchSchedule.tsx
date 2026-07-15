@@ -153,9 +153,9 @@ function MatchScheduleBase() {
               </span>
             </div>
             <div className="mt-2 flex items-center justify-between text-lg font-bold">
-              <span>{m.home}</span>
+              <span>{m.homeTeam}</span>
               <span className="text-primary">vs</span>
-              <span>{m.away}</span>
+              <span>{m.awayTeam}</span>
             </div>
             <div className="mt-2 text-xs text-muted-foreground">{m.venue}</div>
             <div className="mt-2 inline-block rounded-full bg-primary/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary">

@@ -118,7 +118,7 @@ function StadiumMapBase() {
   /**
    * Crowd data indexed by zone name for O(1) lookup during SVG rendering.
    */
-  const byZone = useMemo(() => Object.fromEntries(data.map((d) => [d.zone, d])), [data]);
+  const byZone = useMemo(() => Object.fromEntries(data.map((d) => [d.name, d])), [data]);
 
   /**
    * Updates the selected zone when the user clicks or activates a zone via keyboard.
@@ -233,7 +233,7 @@ function StadiumMapBase() {
           </div>
           <div className="flex justify-between">
             <span>Wait</span>
-            <span className="font-semibold">{cur?.wait} min</span>
+            <span className="font-semibold">{cur?.waitTime} min</span>
           </div>
           <div className="flex justify-between">
             <span>Crowd</span>

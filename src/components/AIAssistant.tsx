@@ -12,7 +12,7 @@ import { MessageCircle, Send, X, Loader2 } from "lucide-react";
 import { useServerFn } from "@tanstack/react-start";
 import { chatWithStadiumIQ } from "@/lib/chat.functions";
 import { sanitizeInput } from "@/lib/helpers";
-import { LANGUAGES, MAX_CHAT_LENGTH, RATE_LIMIT_PER_MIN } from "@/lib/constants";
+import { LANGUAGES, MAX_CHAT_LENGTH, RATE_LIMIT_PER_MINUTE } from "@/lib/constants";
 import { useDebounce } from "@/hooks/useDebounce";
 
 /** A single chat message with a role and text content */
@@ -88,7 +88,7 @@ export function AIAssistant({ seedMessage }: AIAssistantProps) {
     if (!clean) return;
     const now = Date.now();
     timestampsRef.current = timestampsRef.current.filter((t) => now - t < 60_000);
-    if (timestampsRef.current.length >= RATE_LIMIT_PER_MIN) {
+    if (timestampsRef.current.length >= RATE_LIMIT_PER_MINUTE) {
       setError("You're sending messages too quickly. Please wait a moment.");
       return;
     }
@@ -159,8 +159,8 @@ export function AIAssistant({ seedMessage }: AIAssistantProps) {
               className="rounded-md border border-border bg-input px-2 py-1 text-xs"
             >
               {LANGUAGES.map((l) => (
-                <option key={l.code} value={l.label}>
-                  {l.label}
+                <option key={l.code} value={l.name}>
+                  {l.flag} {l.name}
                 </option>
               ))}
             </select>
