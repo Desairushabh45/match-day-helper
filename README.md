@@ -3,7 +3,7 @@
 > A GenAI-enabled solution that enhances stadium operations and the overall tournament experience for fans, organizers, volunteers, and venue staff at FIFA World Cup 2026.
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-match--day--helper.vercel.app-gold?style=flat-square)](https://match-day-helper.vercel.app)
-[![GitHub](https://img.shields.io/badge/GitHub-Rohanindia%2Fmed-181717?style=flat-square&logo=github)](https://github.com/Rohanindia/med)
+
 
 ---
 
@@ -151,7 +151,7 @@ src/
 
 ## 💻 Repository
 
-👉 **https://github.com/Rohanindia/med**
+👉 **https://github.com/Desairushabh45/match-day-helper**
 
 ---
 
@@ -162,7 +162,7 @@ src/
 
 ### 1. Clone repository
 ```bash
-git clone https://github.com/Rohanindia/med
+https://github.com/Desairushabh45/match-day-helper
 cd med
 ```
 
